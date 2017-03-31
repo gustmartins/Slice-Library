@@ -330,7 +330,7 @@ class Slice {
 		if (method_exists($this->CI->router, 'fetch_module'))
 		{
 			$module = $this->CI->router->fetch_module();
-			list($path, $_view) = Modules::find($view_name . $this->blade_ext, $module, 'views/');
+			list($path, $_view) = Modules::find($view_name . $this->slice_ext, $module, 'views/');
 
 			if ($path)
 			{
