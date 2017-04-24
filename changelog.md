@@ -1,5 +1,12 @@
 # Change Log
 
+## Version 1.0.2
+
+Release date: April 23, 2017
+
++ Fixed a bug where empty lines were added in the beginning of a rendered view
++ README.md revised to solve some writing errors
+
 ## Version 1.0.1
 
 Release date: March 31, 2017

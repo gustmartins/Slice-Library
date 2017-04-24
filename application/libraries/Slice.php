@@ -123,7 +123,7 @@ class Slice {
 		$this->CI->load->driver('cache');
 		$this->CI->config->load('slice');
 
-		empty($params) or $this->initialize($params);
+		empty($params) OR $this->initialize($params);
 
 		log_message('info', 'Slice Template Class Initialized');
 	}
@@ -870,7 +870,7 @@ class Slice {
 		// Layouts are included in the end of template
 		foreach ($matches as $include)
 		{
-			$content .= "\n".$include[1].'<?php echo $this->_include'.$include[2]."; ?>";
+			$content .= $include[1].'<?php echo $this->_include'.$include[2]."; ?>";
 		}
 
 		return $content;
@@ -888,7 +888,7 @@ class Slice {
 	{
 		$pattern = '/(\s*)@yield(\s*\(.*\))/';
 
-		return preg_replace($pattern, '$1<?php echo $this->_yield$2; ?>', $content);
+		return preg_replace($pattern, '<?php echo $this->_yield$2; ?>', $content);
 	}
 
 	// --------------------------------------------------------------------------
@@ -916,7 +916,7 @@ class Slice {
 	{
 		$pattern = '/(\s*)@section(\s*\(.*\))/';
 
-		return preg_replace($pattern, '$1<?php $this->_opening_section$2; ?>', $content);
+		return preg_replace($pattern, '<?php $this->_opening_section$2; ?>', $content);
 	}
 
 	// --------------------------------------------------------------------------
