@@ -24,6 +24,7 @@ class Test extends CI_Controller
 		$this->slice->with('full_name', 'John Doe')
 					->with('users', [['id' => 1, 'name' => 'John'], ['id' => 2, 'name' => 'Jane'], ['id' => 3, 'name' => 'Dave'], ['id' => 4, 'name' => 'Arthur'], ['id' => 5, 'name' => 'Michael'], ['id' => 6, 'name' => 'Ben']])
 					->with('members', [])
+					->with('rows', '0')
 					->directive('Test::custom_slice_directive')
 					->view('page');
 	}

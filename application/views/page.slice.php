@@ -28,6 +28,9 @@
 	@unless ($members)
 		There are no members at the moment.
 	@endunless
+	<br>
+	<p>In addition to the conditional directives already discussed, you may use the <mark>&#64;isset</mark> and <mark>&#64;empty</mark> directives as convenient shortcuts for their respective PHP functions:</p>
+	<code>&#64;isset($rows) <br>   //  $rows is defined and is not null... <br> &#64;endisset <br><br>&#64;empty($rows) <br>   //  $rows is "empty"... <br> &#64;endempty</code>
 
 	<hr>
 

@@ -203,6 +203,18 @@ Slice-Library also provides an `@unless` directive:
 @endunless
 ```
 
+In addition to the conditional directives already discussed, you may use the `@isset` and `@empty` directives as convenient shortcuts for their respective PHP functions:
+
+```php
+@isset($rows)
+  //  $rows is defined and is not null...
+@endisset
+
+@empty($rows)
+  //  $rows is "empty"...
+@endempty
+```
+
 ### Loops
 
 Slice-Library provides simple directives for working with PHP's loop structures. Again, each of these directives functions identically to their PHP counterparts:

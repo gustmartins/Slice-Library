@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Slice Class for Codeigniter
+ * Slice Class for CodeIgniter
  *
  * This class is based on Laravel's Blade templating system!
  * To see the usage documentation please visit the link below.
@@ -12,12 +12,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @category	Library
  * @author		Gustavo Martins <gustavo_martins92@hotmail.com>
  * @link		https://github.com/GustMartins/Slice-Library
- * @version 	1.0.0
+ * @version 	1.1.0
  */
 class Slice {
-
-	// --------------------------------------------------------------------------
-	// --------------------------------------------------------------------------
 
 	/**
 	 *  The file extension for the slice template
@@ -84,6 +81,7 @@ class Slice {
 		'ternary',
 		'preserved',
 		'echo',
+		'variable',
 		'forelse',
 		'empty',
 		'endforelse',
@@ -108,7 +106,6 @@ class Slice {
 	);
 	
 	// --------------------------------------------------------------------------
-	// --------------------------------------------------------------------------
 
 	/**
 	 *  Slice Class Constructor
@@ -120,8 +117,8 @@ class Slice {
 	{
 		// Set the super object to a local variable for use later
 		$this->CI =& get_instance();
-		$this->CI->load->driver('cache');
-		$this->CI->config->load('slice');
+		$this->CI->load->driver('cache');	//	Load CI cache driver
+		$this->CI->config->load('slice');	//	Load Slice config file
 
 		empty($params) OR $this->initialize($params);
 
@@ -217,7 +214,6 @@ class Slice {
 	}
 
 	// --------------------------------------------------------------------------
-	// --------------------------------------------------------------------------
 
 	/**
 	 *  Sets one single data to Slice Template
@@ -282,7 +278,6 @@ class Slice {
 	}
 
 	// --------------------------------------------------------------------------
-	// --------------------------------------------------------------------------
 
 	/**
 	 *  Outputs template content
@@ -313,7 +308,10 @@ class Slice {
 	// --------------------------------------------------------------------------
 
 	/**
-	 *  Verifies if a file exists! Even if you are using Modular Extensions
+	 *  Verifies if a file exists!
+	 *  
+	 *  This function verifies if a file exists evven if you are using
+	 *  Modular Extensions
 	 *
 	 *  @param    string    $filename
 	 *  @param    boolean   $show_error
@@ -378,10 +376,9 @@ class Slice {
 	}
 
 	// --------------------------------------------------------------------------
-	// --------------------------------------------------------------------------
 
 	/**
-	 *  Compiles a template and save it in the cache
+	 *  Compiles a template and saves it in the cache
 	 *
 	 *  @param    string   $template
 	 *  @return   string
@@ -495,6 +492,7 @@ class Slice {
 
 	/**
 	 *  Starts buffering the content of a section
+	 *  
 	 *  If the param $value is different of NULL it will be the content of 
 	 *  the current section
 	 *
@@ -519,6 +517,7 @@ class Slice {
 
 	/**
 	 *  Stops buffering the content of a section
+	 *  
 	 *  If the param $value is different of NULL it will be the 
 	 *  content of the current section
 	 *
@@ -601,7 +600,7 @@ class Slice {
 	// --------------------------------------------------------------------------
 
 	/**
-	 *  Preservers an expression to be displayed in the browser
+	 *  Preserves an expression to be displayed in the browser
 	 *
 	 *  @param    string   $content
 	 *  @return   string
@@ -626,6 +625,21 @@ class Slice {
 		$pattern = '/\{\{(.+?)\}\}/';
 
 		return preg_replace($pattern, '<?php echo $1; ?>', $content);
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 *  Rewrites Blade variable handling function into valid PHP
+	 *
+	 *  @param    string   $content
+	 *  @return   string
+	 */
+	protected function _compile_variable($content)
+	{
+		$pattern = '/(\s*)@(isset|empty)(\s*\(.*\))/';
+
+		return preg_replace($pattern, '$1<?php if ($2$3): ?>', $content);
 	}
 
 	// --------------------------------------------------------------------------
@@ -807,14 +821,16 @@ class Slice {
 	// --------------------------------------------------------------------------
 
 	/**
-	 *  Rewrites Blade endunless statement into valid PHP
+	 *  Rewrites Blade endunless, endisset and endempty statements into valid PHP
 	 *
 	 *  @param    string   $content
 	 *  @return   string
 	 */
 	protected function _compile_endunless($content)
 	{
-		return str_replace('@endunless', '<?php endif; ?>', $content);
+		$pattern = '/(\s*)@(endunless|endisset|endempty)/';
+
+		return preg_replace($pattern, '<?php endif; ?>', $content);
 	}
 
 	// --------------------------------------------------------------------------
@@ -959,11 +975,10 @@ class Slice {
 	}
 
 	// --------------------------------------------------------------------------
-	// --------------------------------------------------------------------------
 
 	/**
 	 *  Stores the content of a section
-	 *  It alse replaces the Blade @parent statement with the previous section
+	 *  It also replaces the Blade @parent statement with the previous section
 	 *
 	 *  @param    string   $section
 	 *  @param    string   $content
