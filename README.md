@@ -311,6 +311,26 @@ Of course, if you attempt to `@include` a view which does not exist, Slice-Libra
 @includeIf('view.name', ['some' => 'data'])
 ```
 
+### Rendering Views For Collections
+
+It is very useful to combine loops and includes into one line and it is possible with Slice's `@each` directive:
+
+```php
+@each('view.name', $cars, 'car')
+```
+
+The first argument is the view partial to render for each element in the array. The second argument is the array you wish to iterate over, while the third argument is the variable name that will be assigned to the current iteration within the view.
+
+In the example, if you are iterating over an array of `cars`, typically you will want to access each car as a `car` variable within your view partial.
+
+The key for the current iteration will be available as the `key` variable within your view partial.
+
+You may also pass a fourth argument to the `@each` directive. This argument determines the view that will be rendered if the given array is empty.
+
+```php
+@each('view.name', $cars, 'car', 'view.empty')
+```
+
 ### Extending Slice-Library Directives
 
 Slice-Library allows you to define your own custom directives using the `directive` method. When the Slice compiler encounters the custom directive, it will call the provided callback with the expression that the directive contains.
@@ -355,7 +375,7 @@ For more information about contributing to the project please, read the [Contrib
 
 ## Change Log
 
-Currently, the Slice-Library is in the version **1.0.2**. See the full [Changelog][changelog] for more details.
+Currently, the Slice-Library is in the version **1.1.0**. See the full [Changelog][changelog] for more details.
 
 [GustMartins]: https://github.com/GustMartins
 [contrib]: https://github.com/GustMartins/Slice-Library/blob/master/contributing.md

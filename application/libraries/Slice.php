@@ -92,6 +92,7 @@ class Slice {
 		'breakIf',
 		'break',
 		'closing_statements',
+		'each',
 		'unless',
 		'endunless',
 		'includeIf',
@@ -543,6 +544,36 @@ class Slice {
 	// --------------------------------------------------------------------------
 
 	/**
+	 *  Iterates through a variable to include content
+	 *
+	 *  @param    string   $template
+	 *  @param    array    $variable
+	 *  @param    string   $label
+	 *  @param    string   $default
+	 *  @return   string
+	 */
+	protected function _each($template, $variable, $label, $default = NULL)
+	{
+		$content = '';
+
+		if (count($variable) > 0)
+		{
+			foreach ($variable as $val[$label])
+			{
+				$content .= $this->_include($template, $val);
+			}
+		}
+		else
+		{
+			$content .= ($default !== NULL) ? $this->_include($default) : '';
+		}
+
+		return $content;
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
 	 *  Rewrites custom directives defined by the user
 	 *
 	 *  @param    string   $value
@@ -801,6 +832,21 @@ class Slice {
 		$pattern = '/(\s*)@(endif|endforeach|endfor|endwhile)(\s*)/';
 
 		return preg_replace($pattern, '$1<?php $2; ?>$3', $content);
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 *  Rewrites Blade each statement into valid PHP
+	 *
+	 *  @param    string   $content
+	 *  @return   string
+	 */
+	protected function _compile_each($content)
+	{
+		$pattern = '/(\s*)@each(\s*\(.*?\))(\s*)/';
+
+		return preg_replace($pattern, '$1<?php echo $this->_each$2; ?>$3', $content);
 	}
 
 	// --------------------------------------------------------------------------
