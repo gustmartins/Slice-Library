@@ -118,6 +118,8 @@ class Slice {
 	{
 		// Set the super object to a local variable for use later
 		$this->CI =& get_instance();
+		$this->CI->benchmark->mark('slice_execution_time_start');	//	Start the timer
+
 		$this->CI->load->driver('cache');	//	Load CI cache driver
 		$this->CI->config->load('slice');	//	Load Slice config file
 
@@ -440,6 +442,8 @@ class Slice {
 		eval(' ?>'.$template.'<?php ');
 
 		$content = ob_get_clean();
+
+		$this->CI->benchmark->mark('slice_execution_time_end');	//	Stop the timer
 
 		return $content;
 	}
