@@ -29,6 +29,13 @@ class Slice {
 	 *  @var   integer
 	 */
 	public $cache_time		= 3600;
+
+	/**
+	 *  Autoload CodeIgniter Libraries and Helpers
+	 *
+	 *  @var   boolean
+	 */
+	public $enable_autoload	= FALSE;
 	
 	// --------------------------------------------------------------------------
 
@@ -66,6 +73,20 @@ class Slice {
 	 *  @var   array
 	 */
 	protected $_directives	= array();
+
+	/**
+	 *  CodeIgniter Libraries to autoload with Slice-Library
+	 *
+	 *  @var   array
+	 */
+	protected $_ci_libraries	= array();
+
+	/**
+	 *  CodeIgniter Helpers to autoload with Slice-Library
+	 *
+	 *  @var   array
+	 */
+	protected $_ci_helpers		= array();
 
 	// --------------------------------------------------------------------------
 
@@ -124,6 +145,16 @@ class Slice {
 		$this->CI->config->load('slice');	//	Load Slice config file
 
 		$this->initialize($params);
+
+		//	Autoload CodeIgniter Libraries and Helpers
+		if ($this->enable_autoload === TRUE)
+		{
+			//	Autoload Libraries
+			empty($this->_ci_libraries) OR $this->CI->load->library($this->_ci_libraries);
+
+			//	Autoload Helpers
+			empty($this->_ci_helpers) OR $this->CI->load->helper($this->_ci_helpers);
+		}
 
 		log_message('info', 'Slice Template Class Initialized');
 	}
@@ -209,9 +240,12 @@ class Slice {
 	 */
 	public function clear()
 	{
-		$this->slice_ext	= config_item('slice_ext');
-		$this->cache_time	= config_item('cache_time');
-		$this->_data		= array();
+		$this->slice_ext		= config_item('slice_ext');
+		$this->cache_time		= config_item('cache_time');
+		$this->enable_autoload	= config_item('enable_autoload');
+		$this->_ci_libraries	= config_item('libraries');
+		$this->_ci_helpers		= config_item('helpers');
+		$this->_data			= array();
 
 		return $this;
 	}

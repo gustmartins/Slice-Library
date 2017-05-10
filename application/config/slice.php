@@ -27,3 +27,27 @@ $config['slice_ext'] = '.slice.php';
 |
 */
 $config['cache_time'] = 3600;
+
+/*
+|--------------------------------------------------------------------------
+| Enable/Disable Autoload
+|--------------------------------------------------------------------------
+|
+| Set to TRUE to autoload CodeIgniter Libraries and Helpers
+|
+*/
+$config['enable_autoload'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Resources to Autoload
+|--------------------------------------------------------------------------
+|
+| List of Libraries and Helpers to autoload with Slice-Library.
+|
+| WARNING: To autoload this resources you must set 'enable_autoload'
+| variable to TRUE.
+|
+*/
+$config['libraries'] = array();
+$config['helpers'] = array();
