@@ -123,7 +123,7 @@ class Slice {
 		$this->CI->load->driver('cache');	//	Load CI cache driver
 		$this->CI->config->load('slice');	//	Load Slice config file
 
-		empty($params) OR $this->initialize($params);
+		$this->initialize($params);
 
 		log_message('info', 'Slice Template Class Initialized');
 	}
