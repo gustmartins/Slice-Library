@@ -8,9 +8,11 @@ Slice-Library is a CodeIgniter library that simulates Laravel's Blade templating
 + Requires nearly zero configuration!
 + Easy to install and use.
 + Helps you organize your views folder.
++ 30 directives to use!
 + Does not restrict you from using plain PHP code in your views.
 + Easy to learn and to get used to.
 + Caches files until they are modified!
++ Handles complex language string lines.
 + Provides you clear, thorough documentation.
 
 ## Requirements
@@ -26,13 +28,21 @@ Finally, make sure the folder `application/cache/` has a **`0664`** permission t
 
 That's all! Have fun!
 
-## Loading Library
+## Loading Slice-Library
 
 Your can load the Slice-Library as you load any other library in CodeIgniter:
 
 ```php
 $this->load->library('slice');
 ```
+
+### Other Libraries and Helpers
+
+Within Slice you can optionally load any Library and/or Helper! This is very useful if you use a library and/or a helper to handle assets, for example, and you don't want to put them in the `config/autoload.php` file.
+
+So, to autoload any library and/or helper set the variable `enable_autoload` in the `config/slice.php` file to `TRUE`. Then add the library you want to load in the config array `libraries` and the helpers you want to load in the config array `helpers`.
+
+This way, your libraries and helpers will be loaded automatically!
 
 ### Creating Views
 
@@ -84,6 +94,82 @@ If you need to append some value to a data you can use the `append` method:
 $this->slice->set(['foo' => 'bar', 'users' => ['Jack', 'Kate', 'Sawyer', 'Lock', 'Jacob']])
             ->append('users', 'Ben')
             ->view('users');
+```
+
+## Localization
+
+Slice's localization features provide a convenient way to retrieve strings in various languages, allowing you to easily support multiple languages within your application.
+
+If you want to support multiple languages in your application, you would provide folders inside your `application/language/` directory for each of them, and you would specify the default language in your `application/config/config.php`:
+
+```plain
+  application/
+              language/
+                      english/
+                              error_lang.php
+                              message_lang.php
+                      french/
+                              error_lang.php
+                              message_lang.php
+```
+
+### Configuring The Locale
+
+The default language for your application is stored in the `application/config/config.php` file. Of course, you may modify this value to suit the needs of your application. You may also change the active language using the `locale` method:
+
+```php
+$this->slice->locale('french');
+```
+
+### Retrieving Translation Strings
+
+You may retrieve lines from language files using the `@lang` directive. The `@lang` accepts the file and key of the translation string as its first argument. For example, let's retrieve the welcome translation string from the `application/language/english/message_lang.php` language file:
+
+```php
+@lang('message.welcome')
+```
+
+If the specified translation string does not exist, the `@lang` directive will simply return the translation string key. So, using the example above, the `@lang` directive would return '*messages.welcome*' if the translation string does not exist.
+
+### Replacing Parameters In Translation Strings
+
+If you wish, you may define place-holders in your translation strings. All place-holders are prefixed with a `:`. For example, you may define a welcome message with a place-holder name:
+
+```php
+$lang['welcome'] = 'Welcome, :Name';
+```
+
+To replace the place-holders when retrieving a translation string, pass an array of replacements as the second argument to the `@lang` directive:
+
+```php
+@lang('messages.welcome', ['name' => 'GustMartins'])
+```
+
+If your place-holder contains all capital letters, or only has its first letter capitalized, the translated value will be capitalized accordingly:
+
+```php
+$lang['welcome'] = 'Welcome, :NAME';  //  Welcome, GUSTMARTINS
+$lang['goodbye'] = 'Goodbye, :Name';  //  Goodbye, Gustmartins
+```
+
+### Pluralization
+
+Pluralization is a complex problem, as different languages have a variety of complex rules for pluralization. By using a "pipe" character, you may distinguish singular and plural forms of a string:
+
+```php
+$lang['apples'] = 'There is one apple|There are many apples';
+```
+
+You may even create more complex pluralization rules which specify translation strings for multiple number ranges:
+
+```php
+$lang['apples'] = '{0} There are none|[1,19] There are some|[20,*] There are many';
+```
+
+After defining a translation string that has pluralization options, you may use the `@choice` directive to retrieve the line for a given "count". In this example, since the count is greater than one, the plural form of the translation string is returned:
+
+```php
+@choice('messages.apples', 10)
 ```
 
 ## Slice Syntax
@@ -375,7 +461,7 @@ For more information about contributing to the project please, read the [Contrib
 
 ## Change Log
 
-Currently, the Slice-Library is in the version **1.1.0**. See the full [Changelog][changelog] for more details.
+Currently, the Slice-Library is in the version **1.2.0**. See the full [Changelog][changelog] for more details.
 
 [GustMartins]: https://github.com/GustMartins
 [contrib]: https://github.com/GustMartins/Slice-Library/blob/master/contributing.md

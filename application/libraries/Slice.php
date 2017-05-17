@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @category	Library
  * @author		Gustavo Martins <gustavo_martins92@hotmail.com>
  * @link		https://github.com/GustMartins/Slice-Library
- * @version 	1.1.0
+ * @version 	1.2.0
  */
 class Slice {
 
@@ -36,6 +36,13 @@ class Slice {
 	 *  @var   boolean
 	 */
 	public $enable_autoload	= FALSE;
+
+	/**
+	 *  Default language
+	 *
+	 *  @var   string
+	 */
+	public $locale			= 'english';
 	
 	// --------------------------------------------------------------------------
 
@@ -88,6 +95,20 @@ class Slice {
 	 */
 	protected $_ci_helpers		= array();
 
+	/**
+	 *  Language strings to use with translation
+	 *
+	 *  @var   array
+	 */
+	protected $_language		= array();
+
+	/**
+	 *  List of languages loaded
+	 *
+	 *  @var   array
+	 */
+	protected $_i18n_loaded		= array();
+
 	// --------------------------------------------------------------------------
 
 	/**
@@ -124,7 +145,9 @@ class Slice {
 		'opening_section',
 		'closing_section',
 		'php',
-		'endphp'
+		'endphp',
+		'lang',
+		'choice'
 	);
 	
 	// --------------------------------------------------------------------------
@@ -243,6 +266,7 @@ class Slice {
 		$this->slice_ext		= config_item('slice_ext');
 		$this->cache_time		= config_item('cache_time');
 		$this->enable_autoload	= config_item('enable_autoload');
+		$this->locale			= config_item('language');
 		$this->_ci_libraries	= config_item('libraries');
 		$this->_ci_helpers		= config_item('helpers');
 		$this->_data			= array();
@@ -396,6 +420,20 @@ class Slice {
 				return FALSE;
 			}
 		}
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 *  Alters the language to use with translation strings
+	 *
+	 *  @param    string   $locale
+	 *  @return   Slice
+	 */
+	public function locale($locale)
+	{
+		$this->locale = (string) $locale;
+		return $this;
 	}
 
 	// --------------------------------------------------------------------------
@@ -577,6 +615,111 @@ class Slice {
 		}
 
 		return $last_section;
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 *  Retrieves a line from the language file loaded
+	 *
+	 *  @param    string    $line        String line to load
+	 *  @param    array     $params      Place-holders to parse in the string
+	 *  @return   string
+	 */
+	protected function _i18n($line, $params = array())
+	{
+		list($file, $string) = array_pad(explode('.', $line), 2, NULL);
+
+		//	Here tries to get the string with the $file variable...
+		$line = isset($this->_language[$file]) ? $this->_language[$file] : $file;
+		
+		if ($string !== NULL)
+		{
+			if ( ! isset($this->_i18n_loaded[$file]) OR $this->_i18n_loaded[$file] !== $this->locale)
+			{
+				//	Load the file into the language array
+				$this->_language = array_merge($this->_language, $this->CI->lang->load($file, $this->locale, TRUE));
+				//	Save the loaded file and idiom
+				$this->_i18n_loaded[$file] = $this->locale;
+			}
+
+			//	... and here, the variable used is $string
+			$line = isset($this->_language[$string]) ? $this->_language[$string] : $string;
+		}
+
+		//	Deals with the place-holders for the string
+		if ( ! empty($params) && is_array($params))
+		{
+			foreach ($params as $name => $content)
+			{
+				$line = (strpos($line, ':'.strtoupper($name)) !== FALSE)
+					? str_replace(':'.strtoupper($name), strtoupper($content), $line)
+					: $line;
+
+				$line = (strpos($line, ':'.ucfirst($name)) !== FALSE)
+					? str_replace(':'.ucfirst($name), ucfirst($content), $line)
+					: $line;
+
+				$line = (strpos($line, ':'.$name) !== FALSE)
+					? str_replace(':'.$name, $content, $line)
+					: $line;
+			}
+		}
+
+		return $line;
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 *  Retrieves a line from the language file loaded in singular or plural form
+	 *
+	 *  @param    string          $line
+	 *  @param    integer|array   $number
+	 *  @param    array           $params
+	 *  @return   string
+	 */
+	protected function _inflector($line, $number, $params = array())
+	{
+		$lines = explode('|', $this->_i18n($line, $params));
+
+		if (is_array($number))
+		{
+			$number = count($number);
+		}
+
+		foreach ($lines as $string)
+		{
+			//	Searches for a given amount
+			preg_match_all('/\{([0-9]{1,})\}/', $string, $matches);
+			list($str, $count) = $matches;
+
+			if (isset($count[0]) && $count[0] == $number)
+			{
+				return str_replace('{'.$count[0].'} ', '', $string);
+			}
+
+			//	Searches for a range interval
+			preg_match_all('/\[([0-9]{1,}),\s?([0-9*]{1,})\]/', $string, $matches);
+			list($str, $start, $end) = $matches;
+
+			if (isset($end[0]) && $end[0] !== '*')
+			{
+				if (in_array($number, range($start[0], $end[0])))
+				{
+					return preg_replace('/\[.*?\]\s?/', '', $string);
+				}
+			}
+			elseif (isset($end[0]) && $end[0] === '*')
+			{
+				if ($number >= $start[0])
+				{
+					return preg_replace('/\[.*?\]\s?/', '', $string);
+				}
+			}
+		}
+
+		return ($number > 1) ? $lines[1] : $lines[0];
 	}
 
 	// --------------------------------------------------------------------------
@@ -1056,6 +1199,36 @@ class Slice {
 	protected function _compile_endphp($content)
 	{
 		return str_replace('@endphp', '?>', $content);
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 *  Rewrites Blade @lang statement into valid PHP
+	 *
+	 *  @param    string   $content
+	 *  @return   string
+	 */
+	protected function _compile_lang($content)
+	{
+		$pattern = '/(\s*)@lang(\s*\(.*\))/';
+
+		return preg_replace($pattern, '<?php echo $this->_i18n$2; ?>', $content);
+	}
+
+	// --------------------------------------------------------------------------
+
+	/**
+	 *  Rewrites Blade @choice statement into valid PHP
+	 *
+	 *  @param    string   $content
+	 *  @return   string
+	 */
+	protected function _compile_choice($content)
+	{
+		$pattern = '/(\s*)@choice(\s*\(.*\))/';
+
+		return preg_replace($pattern, '<?php echo $this->_inflector$2; ?>', $content);
 	}
 
 	// --------------------------------------------------------------------------
