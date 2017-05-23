@@ -626,7 +626,7 @@ class Slice {
 	 *  @param    array     $params      Place-holders to parse in the string
 	 *  @return   string
 	 */
-	protected function _i18n($line, $params = array())
+	public function i18n($line, $params = array())
 	{
 		list($file, $string) = array_pad(explode('.', $line), 2, NULL);
 
@@ -681,7 +681,7 @@ class Slice {
 	 */
 	protected function _inflector($line, $number, $params = array())
 	{
-		$lines = explode('|', $this->_i18n($line, $params));
+		$lines = explode('|', $this->i18n($line, $params));
 
 		if (is_array($number))
 		{
@@ -1213,7 +1213,7 @@ class Slice {
 	{
 		$pattern = '/(\s*)@lang(\s*\(.*\))/';
 
-		return preg_replace($pattern, '<?php echo $this->_i18n$2; ?>', $content);
+		return preg_replace($pattern, '<?php echo $this->i18n$2; ?>', $content);
 	}
 
 	// --------------------------------------------------------------------------
