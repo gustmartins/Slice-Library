@@ -1,5 +1,12 @@
 # Change Log
 
+## Version 1.2.1
+
+Release date: May 22, 2017
+
++ Renamed _i18n() function to i18n() and maked it public
++ Fixed a bug when two or more `@lang()` or `@choice()` were placed in the same line
+
 ## Version 1.2.0
 
 Release date: May 17, 2017

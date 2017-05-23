@@ -461,7 +461,7 @@ For more information about contributing to the project please, read the [Contrib
 
 ## Change Log
 
-Currently, the Slice-Library is in the version **1.2.0**. See the full [Changelog][changelog] for more details.
+Currently, the Slice-Library is in the version **1.2.1**. See the full [Changelog][changelog] for more details.
 
 [GustMartins]: https://github.com/GustMartins
 [contrib]: https://github.com/GustMartins/Slice-Library/blob/master/contributing.md
