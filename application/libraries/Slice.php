@@ -679,7 +679,7 @@ class Slice {
 	 *  @param    array           $params
 	 *  @return   string
 	 */
-	protected function _inflector($line, $number, $params = array())
+	public function inflector($line, $number, $params = array())
 	{
 		$lines = explode('|', $this->i18n($line, $params));
 
@@ -1228,7 +1228,7 @@ class Slice {
 	{
 		$pattern = '/(\s*)@choice(\s*\(.*?\))/';
 
-		return preg_replace($pattern, '<?php echo $this->_inflector$2; ?>', $content);
+		return preg_replace($pattern, '<?php echo $this->inflector$2; ?>', $content);
 	}
 
 	// --------------------------------------------------------------------------
