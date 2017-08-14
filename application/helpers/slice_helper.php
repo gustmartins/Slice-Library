@@ -82,6 +82,46 @@ if ( ! function_exists('choise'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('dump'))
+{
+	/**
+	 *  Dump the passed variables
+	 *
+	 *  @return    mixed
+	 */
+	function dump()
+	{
+		array_map(function ($data)
+		{
+			var_dump($data);
+		},
+		func_get_args());
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('dd'))
+{
+	/**
+	 *  Dump the passed variables and end the script
+	 *
+	 *  @return    mixed
+	 */
+	function dd()
+	{
+		array_map(function ($data)
+		{
+			var_dump($data);
+		},
+		func_get_args());
+
+		die(1);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('helper'))
 {
 	/**
@@ -137,6 +177,48 @@ if ( ! function_exists('resolve'))
 	function resolve($name)
 	{
 		return app($name);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('retry'))
+{
+	/**
+	 *  Attempt to execute an operation a given number of times
+	 *
+	 *  @param     int         $attempts
+	 *  @param     callable    $callback
+	 *  @param     integer     $sleep
+	 *  @return    mixed
+	 *
+	 *  @throws    \Exception
+	 */
+	function retry($attempts, callable $callback, $sleep = 0)
+	{
+		$attempts--;	//	Decrement the number of attempts
+
+		beginning:
+		try
+		{
+			return $callback();
+		}
+		catch (Exception $e)
+		{
+			if ( ! $attempts)
+			{
+				throw $e;
+			}
+
+			$attempts--;	//	Decrement the number of attempts
+
+			if ($sleep)
+			{
+				usleep($sleep * 1000);
+			}
+
+			goto beginning;
+		}
 	}
 }
 
