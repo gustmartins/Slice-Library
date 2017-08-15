@@ -122,6 +122,63 @@ if ( ! function_exists('dd'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('decrypt'))
+{
+	/**
+	 *  Decrypt a given string
+	 *
+	 *  @param     string    $value
+	 *  @return    string
+	 */
+	function decrypt($value)
+	{
+		return app('encryption')->decrypt($value);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('encrypt'))
+{
+	/**
+	 *  Encrypt a given string
+	 *
+	 *  @param     string    $value
+	 *  @return    string
+	 */
+	function encrypt($value)
+	{
+		return app('encryption')->encrypt($value);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('ends_with'))
+{
+	/**
+	 *  Determine if a given string ends with a given substring
+	 *
+	 *  @param     string          $haystack
+	 *  @param     string|array    $needles
+	 *  @return    boolean
+	 */
+	function ends_with($haystack, $needles)
+	{
+		foreach ((array) $needles as $needle)
+		{
+			if (substr($haystack, -strlen($needle)) === (string) $needle)
+			{
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('helper'))
 {
 	/**
@@ -240,6 +297,31 @@ if ( ! function_exists('slice'))
 		}
 
 		return app('slice', (array) $params);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('starts_with'))
+{
+	/**
+	 *  Determine if a given string starts with a given substring
+	 *
+	 *  @param     string          $haystack
+	 *  @param     string|array    $needles
+	 *  @return    boolean
+	 */
+	function starts_with($haystack, $needles)
+	{
+		foreach ((array) $needles as $needle)
+		{
+			if ($needle != '' && substr($haystack, 0, strlen($needle)) === (string) $needle)
+			{
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 }
 
