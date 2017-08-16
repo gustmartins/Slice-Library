@@ -327,6 +327,79 @@ if ( ! function_exists('starts_with'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('str_contains'))
+{
+	/**
+	 *  Determine if a given string contains a given substring
+	 *
+	 *  @param     string          $haystack
+	 *  @param     string|array    $needles
+	 *  @return    boolean
+	 */
+	function str_contains($haystack, $needles)
+	{
+		foreach ((array) $needles as $needle)
+		{
+			if ($needle != '' && mb_strpos($haystack, $needle) !== FALSE)
+			{
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_finish'))
+{
+	/**
+	 *  Cap a string with a single instance of a given value
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $cap
+	 *  @return    string
+	 */
+	function str_finish($str, $cap)
+	{
+		$quoted = preg_quote($cap, '/');
+
+		return preg_replace('/(?:'.$quoted.')+$/u', '', $str).$cap;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_is'))
+{
+	/**
+	 *  Determine if a given string matches a given pattern
+	 *
+	 *  @param     string    $pattern
+	 *  @param     string    $value
+	 *  @return    boolean
+	 */
+	function str_is($pattern, $value)
+	{
+		if ($pattern == $value)
+		{
+			return TRUE;
+		}
+
+		$pattern = preg_quote($pattern, '#');
+
+		//	Asterisks are translated into zero-or-more regular expression wildcards
+		//	to make it convenient to check if the strings starts with the given
+		//	pattern such as "library/*", making any string check convenient.
+		$pattern = str_replace('\*', '.*', $pattern);
+
+		return (bool) preg_match('#^'.$pattern.'\z#u', $value);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('view'))
 {
 	/**
