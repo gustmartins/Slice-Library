@@ -30,8 +30,12 @@ if ( ! function_exists('app'))
 			return get_instance();
 		}
 
+		$lib = ($make == 'user_agent')
+			? 'agent'
+			: ($make == 'unit_test') ? 'unit' : $make;
+
 		//	Library not loaded
-		if ( ! isset(get_instance()->$make))
+		if ( ! isset(get_instance()->$lib))
 		{
 			//	Special case 'cache' is a driver
 			if ($make == 'cache')
@@ -40,7 +44,7 @@ if ( ! function_exists('app'))
 			}
 
 			//	The type of what is being loaded, i.e. a model or a library
-			$loader = (ends_with($class, '_model'))
+			$loader = (ends_with($make, '_model'))
 				? 'model'
 				: 'library';
 
