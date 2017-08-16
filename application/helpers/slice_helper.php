@@ -400,6 +400,25 @@ if ( ! function_exists('str_is'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('str_limit'))
+{
+	/**
+	 *  Ellipsize a string
+	 *
+	 *  @param     string     $str
+	 *  @param     integer    $max_length
+	 *  @param     integer    $position
+	 *  @param     string     $ellipsis
+	 *  @return    string
+	 */
+	function str_limit($str, $max_length = 100, $position = 1, $ellipsis = '&hellip;')
+	{
+		return helper('text.ellipsize', $str, $max_length, $position, $ellipsis);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('view'))
 {
 	/**
