@@ -64,6 +64,45 @@ if ( ! function_exists('app'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('cache'))
+{
+	/**
+	 *  Get / set the specified cache value
+	 *
+	 *  If an array is passed, we'll assume you want to put to the cache
+	 *
+	 *  @param     array|string    $key
+	 *  @param     mixed           $value
+	 *  @return    mixed
+	 */
+	function cache($key = NULL, $value = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('cache');
+		}
+
+		if (is_array($key) && is_int($value))
+		{
+			foreach ($key as $id => $data)
+			{
+				app('cache')->file->save($id, $data, ($value * 60));
+			}
+
+			return;
+		}
+
+		if ($cached = app('cache')->file->get($key))
+		{
+			return $cached;
+		}
+
+		return $value;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('camel_case'))
 {
 	/**
@@ -93,6 +132,43 @@ if ( ! function_exists('choise'))
 	function choise($key, $number, $replace = array())
 	{
 		return app('slice')->inflector($key, $number, $replace);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('config'))
+{
+	/**
+	 *  Get / set the specified configuration value
+	 *
+	 *  @param     array|string    $key
+	 *  @param     mixed           $value
+	 *  @return    mixed
+	 */
+	function config($key = NULL, $value = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('config');
+		}
+
+		if (is_array($key))
+		{
+			foreach ($key as $item => $val)
+			{
+				config($item, $val);
+			}
+
+			return;
+		}
+
+		if ( ! is_null($value))
+		{
+			return app('config')->set_item($key, $value);
+		}
+
+		return app('config')->item($key);
 	}
 }
 
@@ -222,6 +298,48 @@ if ( ! function_exists('helper'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('input'))
+{
+	/**
+	 *  Retrieve input item from the request
+	 *
+	 *  @param     array|string    $key
+	 *  @param     string          $method
+	 *  @return    mixed
+	 */
+	function input($key = NULL, $method = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('input');
+		}
+
+		if (is_array($key))
+		{
+			if ( ! is_null($method))
+			{
+				return app('input')->$method($key);
+			}
+
+			return NULL;
+		}
+		
+		if ($value = app('input')->post_get($key))
+		{
+			return $value;
+		}
+
+		if ($value = app('input')->cookie($key))
+		{
+			return $value;
+		}
+
+		return app('input')->server($key);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('kebab_case'))
 {
 	/**
@@ -333,6 +451,41 @@ if ( ! function_exists('retry'))
 
 			goto beginning;
 		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('session'))
+{
+	/**
+	 *  Get / set the specified session value
+	 *
+	 *  If an array is passed as the key, we will assume you want to set
+	 *  an array of values
+	 *
+	 *  @param     array|string    $key
+	 *  @param     mixed           $value
+	 *  @return    mixed
+	 */
+	function session($key = NULL, $value = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('session');
+		}
+
+		if (is_array($key))
+		{
+			return app('session')->set_userdata($key);
+		}
+
+		if ( ! is_null($value))
+		{
+			app('session')->set_userdata($key, $value);
+		}
+
+		return app('session')->$key;
 	}
 }
 
