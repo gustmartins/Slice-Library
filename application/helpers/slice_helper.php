@@ -427,6 +427,120 @@ if ( ! function_exists('starts_with'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('str_after'))
+{
+	/**
+	 *  Return the remainder of a string after a given value
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $search
+	 *  @return    string
+	 */
+	function str_after($str, $search)
+	{
+		if ( ! is_bool(strpos($str, $search)))
+		{
+			return substr($str, strpos($str, $search) + strlen($search));
+		}
+
+		return $str;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_after_last'))
+{
+	/**
+	 *  Return the remainder of a string after the last given value
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $search
+	 *  @return    string
+	 */
+	function str_after_last($str, $search)
+	{
+		if ( ! is_bool(strrevpos($str, $search)))
+		{
+			return substr($str, strrevpos($str, $search) + strlen($search));
+		}
+
+		return $str;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_before'))
+{
+	/**
+	 *  Return the string before the given value
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $search
+	 *  @return    string
+	 */
+	function str_before($str, $search)
+	{
+		return substr($str, 0, strpos($str, $search));
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_before_last'))
+{
+	/**
+	 *  Return the string before the last given value
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $search
+	 *  @return    string
+	 */
+	function str_before_last($str, $search)
+	{
+		return substr($str, 0, strrevpos($str, $search));
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_between'))
+{
+	/**
+	 *  Return the string between the given values
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $search1
+	 *  @param     string    $search2
+	 *  @return    string
+	 */
+	function str_between($str, $search1, $search2)
+	{
+		return str_before(str_after($str, $search1), $search2);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_between_last'))
+{
+	/**
+	 *  Return the string between the last given values
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $search1
+	 *  @param     string    $search2
+	 *  @return    string
+	 */
+	function str_between_last($str, $search1, $search2)
+	{
+		return str_after_last(str_before_last($str, $search2), $search1);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('str_contains'))
 {
 	/**
