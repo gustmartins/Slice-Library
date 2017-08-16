@@ -255,6 +255,31 @@ if ( ! function_exists('lang'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('mark'))
+{
+	/**
+	 *  Set a benchmark marker or calculate the time difference between
+	 *  two marked points.
+	 *
+	 *  @param     string    $point1
+	 *  @param     string    $point2
+	 *  @return    void|string
+	 */
+	function mark($point1, $point2 = NULL)
+	{
+		if (is_null($point2))
+		{
+			get_instance()->benchmark->mark($point1);
+		}
+		else
+		{
+			return get_instance()->benchmark->elapsed_time($point1, $point2);
+		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('resolve'))
 {
 	/**
@@ -560,5 +585,21 @@ if ( ! function_exists('__'))
 	function __($key = NULL, $replace = array())
 	{
 		return app('slice')->i18n($key, $replace);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('with'))
+{
+	/**
+	 *  Return the given object (useful for chaining)
+	 *
+	 *  @param     mixed    $object
+	 *  @return    mixed
+	 */
+	function with($object)
+	{
+		return $object;
 	}
 }
