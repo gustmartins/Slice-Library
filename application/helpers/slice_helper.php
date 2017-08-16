@@ -64,6 +64,22 @@ if ( ! function_exists('app'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('camel_case'))
+{
+	/**
+	 *  Convert a string to camel case
+	 *
+	 *  @param     string    $str
+	 *  @return    string
+	 */
+	function camel_case($str)
+	{
+		return lcfirst(studly_case($str));
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('choise'))
 {
 	/**
@@ -206,6 +222,22 @@ if ( ! function_exists('helper'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('kebab_case'))
+{
+	/**
+	 *  Convert a string to kebab case
+	 *
+	 *  @param     string    $str
+	 *  @return    string
+	 */
+	function kebab_case($str)
+	{
+		return snake_case($str, '-');
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('lang'))
 {
 	/**
@@ -297,6 +329,49 @@ if ( ! function_exists('slice'))
 		}
 
 		return app('slice', (array) $params);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('slug_case'))
+{
+	/**
+	 *  Convert the given string to slug case
+	 *
+	 *  @param     string     $value
+	 *  @param     string     $separator
+	 *  @param     boolean    $lowercase
+	 *  @return    string
+	 */
+	function slug_case($str, $separator = '-', $lowercase = TRUE)
+	{
+		$str = helper('text.convert_accented_characters', $str);
+
+		return helper('url.url_title', $str, $separator, $lowercase);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('snake_case'))
+{
+	/**
+	 *  Convert a string to snake case
+	 *
+	 *  @param     string    $str
+	 *  @param     string    $delimiter
+	 *  @return    string
+	 */
+	function snake_case($str, $delimiter = '_')
+	{
+		if ( ! ctype_lower($str))
+		{
+			$str = preg_replace('/\s+/u', '', $str);
+			$str = preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $str);
+		}
+
+		return mb_strtolower($str, 'UTF-8');
 	}
 }
 
@@ -414,6 +489,38 @@ if ( ! function_exists('str_limit'))
 	function str_limit($str, $max_length = 100, $position = 1, $ellipsis = '&hellip;')
 	{
 		return helper('text.ellipsize', $str, $max_length, $position, $ellipsis);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('studly_case'))
+{
+	/**
+	 *  Convert a string to studly caps case
+	 *
+	 *  @param     string    $str
+	 *  @return    string
+	 */
+	function studly_case($str)
+	{
+		return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $str)));
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('title_case'))
+{
+	/**
+	 *  Convert the given string to title case
+	 *
+	 *  @param     string    $str
+	 *  @return    string
+	 */
+	function title_case($str)
+	{
+		return mb_convert_case($str, MB_CASE_TITLE, 'UTF-8');
 	}
 }
 
