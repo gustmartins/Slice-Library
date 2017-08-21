@@ -285,6 +285,31 @@ if ( ! function_exists('decrypt'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('email'))
+{
+	/**
+	 *  Send an email
+	 *
+	 *  @param     string    $to
+	 *  @param     string    $subject
+	 *  @param     string    $message
+	 *  @return    boolean
+	 */
+	function email($to = NULL, $subject = NULL, $message = NULL)
+	{
+		if (is_null($to))
+		{
+			return app('email');
+		}
+
+		app('email')->to($to)->subject($subject)->message($message);
+
+		return app('email')->send();
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('encrypt'))
 {
 	/**
@@ -296,6 +321,22 @@ if ( ! function_exists('encrypt'))
 	function encrypt($value)
 	{
 		return app('encryption')->encrypt($value);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('env'))
+{
+	/**
+	 *  Determine if a given environment is the current environment
+	 *
+	 *  @param     string    $key
+	 *  @return    boolean
+	 */
+	function env($key)
+	{
+		return (strtolower(ENVIRONMENT) === strtolower($key));
 	}
 }
 
@@ -390,6 +431,50 @@ if ( ! function_exists('input'))
 		}
 
 		return app('input')->server($key);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('is'))
+{
+	/**
+	 *  'Is' functions
+	 *
+	 *  @param     string     $key
+	 *  @param     string     $value
+	 *  @return    boolean
+	 */
+	function is($key, $value = NULL)
+	{
+		$common		= array('https', 'cli', 'php', 'writable');
+		$useragent	= array('browser', 'mobile', 'referral', 'robot');
+
+		if (in_array($key, $useragent))
+		{
+			return app('user_agent')->{'is_'.$key}($value);
+		}
+
+		if (in_array($key, $common))
+		{
+			$function = ($key == 'writable')
+				? 'is_really_writable' :
+				'is_'.$key;
+
+			return $function($value);
+		}
+
+		if ($key == 'ajax')
+		{
+			return app('input')->is_ajax_request();
+		}
+
+		if ($key == 'loaded' OR $key == 'load')
+		{
+			return (bool) app('load')->is_loaded($value);
+		}
+
+		return FALSE;
 	}
 }
 
