@@ -123,6 +123,27 @@ if ( ! function_exists('camel_case'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('charset'))
+{
+	/**
+	 *  Get the accepted character sets or a particular character set
+	 *
+	 *  @param     string         $key
+	 *  @return    array|boolean
+	 */
+	function charset($key = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('user_agent')->charsets();
+		}
+
+		return app('user_agent')->accept_charset($key);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('choise'))
 {
 	/**
@@ -173,6 +194,36 @@ if ( ! function_exists('config'))
 		}
 
 		return app('config')->item($key);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('device'))
+{
+	/**
+	 *  Get the agent string or one of this device information: browser
+	 *  name, browser version, mobile device, robot name, plataform or
+	 *  the referrer
+	 *
+	 *  @param     string    $key
+	 *  @return    string
+	 */
+	function device($key = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('user_agent')->agent_string();
+		}
+
+		$devices = array('browser', 'version', 'mobile', 'robot', 'platform', 'referrer');
+
+		if (in_array($key, $devices))
+		{
+			return app('user_agent')->{$key}();
+		}
+
+		return NULL;
 	}
 }
 
@@ -397,6 +448,27 @@ if ( ! function_exists('mark'))
 		{
 			return get_instance()->benchmark->elapsed_time($point1, $point2);
 		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('request'))
+{
+	/**
+	 *  Get a single request header or all of the request headers
+	 *
+	 *  @param     string       $key
+	 *  @return    array|string
+	 */
+	function request($key = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('input')->request_headers();
+		}
+
+		return app('input')->get_request_header($key);
 	}
 }
 
@@ -785,6 +857,30 @@ if ( ! function_exists('str_limit'))
 	function str_limit($str, $max_length = 100, $position = 1, $ellipsis = '&hellip;')
 	{
 		return helper('text.ellipsize', $str, $max_length, $position, $ellipsis);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('strrevpos'))
+{
+	/**
+	 *  Find the position of the last occurrence of a substring in a string
+	 *
+	 *  @param     string         $haystack
+	 *  @param     string         $needle
+	 *  @return    string|boolean
+	 */
+	function strrevpos($haystack, $needle)
+	{
+		$revpos = strpos(strrev($haystack), strrev($needle));
+
+		if ($revpos !== FALSE)
+		{
+			return strlen($haystack) - $revpos - strlen($needle);
+		}
+
+		return FALSE;
 	}
 }
 
