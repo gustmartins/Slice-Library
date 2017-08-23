@@ -199,6 +199,40 @@ if ( ! function_exists('config'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('csrf_field'))
+{
+	/**
+	 *  Generate a CSRF token form field
+	 *
+	 *  @return    string
+	 */
+	function csrf_field()
+	{
+		return helper(
+			'form.form_hidden',
+			get_instance()->security->get_csrf_token_name(),
+			csrf_token()
+		);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('csrf_token'))
+{
+	/**
+	 *  Get the CSRF token value
+	 *
+	 *  @return    string
+	 */
+	function csrf_token()
+	{
+		return get_instance()->security->get_csrf_hash();
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('device'))
 {
 	/**
@@ -513,6 +547,28 @@ if ( ! function_exists('lang'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('length'))
+{
+	/**
+     *  Return the length of the given string
+     *
+     *  @param     string    $value
+     *  @param     string    $encoding
+     *  @return    integer
+     */
+	function length($value, $encoding = NULL)
+	{
+		if ( ! is_null($encoding))
+		{
+			return mb_strlen($value, $encoding);
+		}
+
+		return mb_strlen($value);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('mark'))
 {
 	/**
@@ -612,6 +668,29 @@ if ( ! function_exists('retry'))
 
 			goto beginning;
 		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('segment'))
+{
+	/**
+	 *  Fetch URI Segment
+	 *
+	 *  @param     int       $n
+	 *  @param     mixed     $no_result
+	 *  @param     boolean   $rsegment
+	 *  @return    mixed
+	 */
+	function segment($n, $no_result = NULL, $rsegment = FALSE)
+	{
+		if ($rsegment !== FALSE)
+		{
+			return app('uri')->rsegment($n, $no_result);
+		}
+
+		return app('uri')->segment($n, $no_result);
 	}
 }
 
@@ -998,6 +1077,58 @@ if ( ! function_exists('title_case'))
 	function title_case($str)
 	{
 		return mb_convert_case($str, MB_CASE_TITLE, 'UTF-8');
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('uri'))
+{
+	/**
+	 *  Fetch URI string or Segment Array
+	 *
+	 *  @param     boolean    $array
+	 *  @param     boolean    $rsegment
+	 *  @return    array|string
+	 */
+	function uri($array = FALSE, $rsegment = FALSE)
+	{
+		$preffix = ($rsegment !== FALSE) ? 'r' : '';
+
+		if ($array !== FALSE)
+		{
+			return app('uri')->{$preffix.'segment_array'}();
+		}
+
+		return app('uri')->{$preffix.'uri_string'}();
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('url'))
+{
+	/**
+	 *  Site URL
+	 *
+	 *  @param     string|array  $uri
+	 *  @param     string        $protocol
+	 *  @param     boolean       $base
+	 *  @return    string
+	 */
+	function url($uri = NULL, $protocol = NULL, $base = FALSE)
+	{
+		if (is_null($uri))
+		{
+			return app('uri');
+		}
+
+		if ($base !== FALSE)
+		{
+			return app('config')->base_url($uri, $protocol);
+		}
+
+		return app('config')->site_url($uri, $protocol);
 	}
 }
 
