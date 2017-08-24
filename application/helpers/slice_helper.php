@@ -233,6 +233,22 @@ if ( ! function_exists('csrf_token'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('dbase'))
+{
+	/**
+	 *  Database Loader
+	 *
+	 *  @param     string      $group
+	 *  @return    object|bool
+	 */
+	function dbase($group = '')
+	{
+		return app('load')->database($group, TRUE);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('device'))
 {
 	/**
@@ -589,6 +605,24 @@ if ( ! function_exists('mark'))
 		{
 			return get_instance()->benchmark->elapsed_time($point1, $point2);
 		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('query'))
+{
+	/**
+	 *  Execute the query
+	 *
+	 *  @param     string     $sql
+	 *  @param     array      $binds
+	 *  @param     boolean    $return_object
+	 *  @return    mixed
+	 */
+	function query($sql, $bind = FALSE, $return_object = NULL)
+	{
+		return dbase()->query($sql, $bind, $return_object);
 	}
 }
 
