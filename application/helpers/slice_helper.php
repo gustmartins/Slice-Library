@@ -169,6 +169,47 @@ if ( ! function_exists('choise'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('class_basename'))
+{
+	/**
+	 *  Get the class 'basename' of the given object/class
+	 *
+	 *  @param     string|object    $class
+	 *  @return    string
+	 */
+	function class_basename($class)
+	{
+		$class = is_object($class) ? get_class($class) : $class;
+
+		return basename(str_replace('\\', '/', $class));
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('class_uses_recursive'))
+{
+	/**
+	 *  Return all traits used by a class, it's subclasses and trait of their traits
+	 *
+	 *  @param     string    $class
+	 *  @return    array
+	 */
+	function class_uses_recursive($class)
+	{
+		$result = array();
+
+		foreach (array_merge(array($class => $class), class_parents($class)) as $class)
+		{
+			$results += trait_uses_recursive($class);
+		}
+
+		return array_unique($results);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('config'))
 {
 	/**
@@ -342,6 +383,22 @@ if ( ! function_exists('decrypt'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('e'))
+{
+	/**
+	 *  Escape HTML entities in a string
+	 *
+	 *  @param     string    $value
+	 *  @return    string
+	 */
+	function e($value)
+	{
+		return htmlentities($value, ENT_QUOTES, 'UTF-8', FALSE);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('email'))
 {
 	/**
@@ -419,6 +476,48 @@ if ( ! function_exists('ends_with'))
 		}
 
 		return FALSE;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('first'))
+{
+	/**
+	 *  Return the first element in an array passing a given truth test
+	 *
+	 *  @param     array       $array
+	 *  @param     \Closure    $callback
+	 *  @param     mixed       $default
+	 *  @return    mixed
+	 */
+	function first($array, callable $callback, $default = NULL)
+	{
+		foreach ($array as $key => $value)
+		{
+			if (call_user_func($callback, $key, $value))
+			{
+				return $value;
+			}
+		}
+
+		return value($default);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('head'))
+{
+	/**
+	 *  Get the first element of an array (useful for method chaining)
+	 *
+	 *  @param     array    $array
+	 *  @return    mixed
+	 */
+	function head($array)
+	{
+		return reset($array);
 	}
 }
 
@@ -570,6 +669,22 @@ if ( ! function_exists('lang'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('last'))
+{
+	/**
+	 *  Get the last element from an array
+	 *
+	 *  @param     array    $array
+	 *  @return    mixed
+	 */
+	function last($array)
+	{
+		return end($array);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('length'))
 {
 	/**
@@ -612,6 +727,28 @@ if ( ! function_exists('mark'))
 		{
 			return get_instance()->benchmark->elapsed_time($point1, $point2);
 		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('preg_replace_sub'))
+{
+	/**
+	 *  Replace a given pattern with each value in the array in sequentially
+	 *
+	 *  @param     string    $pattern
+	 *  @param     array     &$replacements
+	 *  @param     string    $subject
+	 *  @return    string
+	 */
+	function preg_replace_sub($pattern, &$replacements, $subject)
+	{
+		return preg_replace_callback($pattern, function() use (&$replacements)
+		{
+			return array_shift($replacements);
+		},
+		$subject);
 	}
 }
 
@@ -1075,6 +1212,46 @@ if ( ! function_exists('str_limit'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('str_random'))
+{
+	/**
+	 *  Create a "Random" String
+	 *
+	 *  @param     integer    $length
+	 *  @param     string     $type
+	 *  @return    string
+	 */
+	function str_random($length = 16, $type = 'alnum')
+	{
+		return helper('string.random_string', $length, $type);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('str_replace_array'))
+{
+	/**
+	 *  Replace a given value in the string sequentially with an array
+	 *
+	 *  @param     string    $search
+	 *  @param     array     $replace
+	 *  @param     string    $subject
+	 *  @return    string
+	 */
+	function str_replace_array($search, array $replace, $subject)
+	{
+		foreach ($replace as $value)
+		{
+			$subject = preg_replace('/'.$search.'/', $value, $subject, 1);
+		}
+
+		return $subject;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('strrevpos'))
 {
 	/**
@@ -1141,6 +1318,29 @@ if ( ! function_exists('title_case'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('trait_uses_recursive'))
+{
+	/**
+	 *  Returns all traits used by a trait and its traits
+	 *
+	 *  @param     string    $trait
+	 *  @return    array
+	 */
+	function trait_uses_recursive($trait)
+	{
+		$traits = class_uses($trait);
+
+		foreach ($traits as $trait)
+		{
+			$traits += trait_uses_recursive($trait);
+		}
+
+		return $traits;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('uri'))
 {
 	/**
@@ -1188,6 +1388,22 @@ if ( ! function_exists('url'))
 		}
 
 		return app('config')->site_url($uri, $protocol);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('value'))
+{
+	/**
+	 *  Return the default value of the given value
+	 *
+	 *  @param     mixed    $value
+	 *  @return    mixed
+	 */
+	function value($value)
+	{
+		return $value instanceof Closure ? $value() : $value;
 	}
 }
 
