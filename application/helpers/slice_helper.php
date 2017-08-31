@@ -117,7 +117,14 @@ if ( ! function_exists('camel_case'))
 	 */
 	function camel_case($str)
 	{
-		return lcfirst(studly_case($str));
+		static $camel_cache = array();
+
+		if (isset($camel_cache[$str]))
+		{
+			return $camel_cache[$str];
+		}
+
+		return $camel_cache[$str] = lcfirst(studly_case($str));
 	}
 }
 
@@ -817,13 +824,21 @@ if ( ! function_exists('snake_case'))
 	 */
 	function snake_case($str, $delimiter = '_')
 	{
+		static $snake_cache = array();
+		$key = $str.$delimiter;
+
+		if (isset($snake_cache[$key]))
+		{
+			return $snake_cache[$key];
+		}
+
 		if ( ! ctype_lower($str))
 		{
 			$str = preg_replace('/\s+/u', '', $str);
 			$str = preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $str);
 		}
 
-		return mb_strtolower($str, 'UTF-8');
+		return $snake_cache[$key] = mb_strtolower($str, 'UTF-8');
 	}
 }
 
@@ -1094,7 +1109,17 @@ if ( ! function_exists('studly_case'))
 	 */
 	function studly_case($str)
 	{
-		return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $str)));
+		static $studly_cache = array();
+		$key = $str;
+
+		if (isset($studly_cache[$key]))
+		{
+			return $studly_cache[$key];
+		}
+
+		$value = ucwords(str_replace(array('-', '_'), ' ', $str));
+
+		return str_replace(' ', '', $value);
 	}
 }
 
