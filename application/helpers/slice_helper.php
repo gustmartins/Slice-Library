@@ -281,6 +281,64 @@ if ( ! function_exists('csrf_token'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('data_get'))
+{
+	/**
+	 *  Get an item from an array or object using 'dot' notation
+	 *
+	 *  @param     mixed     $target
+	 *  @param     string    $key
+	 *  @param     mixed     $default
+	 *  @return    mixed
+	 */
+	function data_get($target, $key, $default = NULL)
+	{
+		if (is_null($key))
+		{
+			return $target;
+		}
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if (is_array($target))
+			{
+				if ( ! array_key_exists($segment, $target))
+				{
+					return value($default);
+				}
+
+				$target = $target[$segment];
+			}
+			elseif ($target instanceof ArrayAccess)
+			{
+				if ( ! isset($target[$segment]))
+				{
+					return value($default);
+				}
+
+				$target = $target[$segment];
+			}
+			elseif (is_object($target))
+			{
+				if ( ! isset($target->{$segment}))
+				{
+					return value($default);
+				}
+
+				$target = $target->{$segment};
+			}
+			else
+			{
+				return value($default);
+			}
+		}
+
+		return $target;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('dbase'))
 {
 	/**
@@ -378,6 +436,37 @@ if ( ! function_exists('decrypt'))
 	function decrypt($value)
 	{
 		return app('encryption')->decrypt($value);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('dot'))
+{
+	/**
+	 *  Flatten a multi-dimensional associative array with dots
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $prepend
+	 *  @return    array
+	 */
+	function dot($array, $prepend = '')
+	{
+		$results = array();
+
+		foreach ($array as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$results = array_merge($results, dot($value, $prepend.$key.'.'));
+			}
+			else
+			{
+				$results[$prepend.$key] = $value;
+			}
+		}
+
+		return $results;
 	}
 }
 
@@ -502,6 +591,81 @@ if ( ! function_exists('first'))
 		}
 
 		return value($default);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('forget'))
+{
+	/**
+	 *  Remove one or many array items from a given array using 'dot' notation
+	 *
+	 *  @param     array           $array
+	 *  @param     array|string    $keys
+	 *  @return    void
+	 */
+	function forget(&$array, $keys)
+	{
+		$original =& $array;
+
+		foreach ((array) $keys as $key)
+		{
+			$parts = explode('.', $key);
+
+			while (count($parts) > 1)
+			{
+				$part = array_shift($parts);
+
+				if (isset($array[$part]) && is_array($array[$part]))
+				{
+					$array =& $array[$part];
+				}
+			}
+
+			unset($array[array_shift($parts)]);
+
+			//	Clean up after each pass
+			$array =& $original;
+		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('get'))
+{
+	/**
+	 *  Get an item from an array using 'dot' notation
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $key
+	 *  @param     mixed     $default
+	 *  @return    mixed
+	 */
+	function get($array, $key, $default = NULL)
+	{
+		if (is_null($key))
+		{
+			return $array;
+		}
+
+		if (isset($array[$key]))
+		{
+			return $array[$key];
+		}
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! is_array($array) OR ! array_key_exists($segment, $array))
+			{
+				return value($default);
+			}
+
+			$array = $array[$segment];
+		}
+
+		return $array;
 	}
 }
 
@@ -732,6 +896,39 @@ if ( ! function_exists('mark'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('object_get'))
+{
+	/**
+	 *  Get an item from an object using 'dot' notation
+	 *
+	 *  @param     object    $object
+	 *  @param     string    $key
+	 *  @param     mixed     $default
+	 *  @return    mixed
+	 */
+	function object_get($object, $key, $default = NULL)
+	{
+		if (is_null($key) OR trim($key) == '')
+		{
+			return $object;
+		}
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! is_object($object) OR ! isset($object->{$segment}))
+			{
+				return value($default);
+			}
+
+			$object = $object->{$segment};
+		}
+
+		return $object;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('preg_replace_sub'))
 {
 	/**
@@ -904,6 +1101,50 @@ if ( ! function_exists('session'))
 		}
 
 		return app('session')->$key;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('set'))
+{
+	/**
+	 *  Set an array item to a given value using 'dot' notation
+	 *
+	 *  @param    array     $array
+	 *  @param    string    $key
+	 *  @param    mixed     $value
+	 *  @return   array
+	 */
+	function set(&$array, $key, $value)
+	{
+		//	If no key is given to the method, the entire array will be replaced
+		if (is_null($key))
+		{
+			return $array = $value;
+		}
+
+		$keys = explode('.', $key);
+
+		while (count($keys) > 1)
+		{
+			$key = array_shift($keys);
+
+			//	If the key doesn't exist at this depth, we will just create
+			//	an empty array to hold the next value, allowing us to create
+			//	the arrays to hold final values at the correct depth. Then
+			//	we'll keep digging into the array.
+			if ( ! isset($array[$key]) OR ! is_array($array[$key]))
+			{
+				$array[$key] = array();
+			}
+
+			$array =& $array[$key];
+		}
+
+		$array[array_shift($keys)] = $value;
+
+		return $array;
 	}
 }
 
