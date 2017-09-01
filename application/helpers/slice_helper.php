@@ -351,28 +351,6 @@ if ( ! function_exists('array_only'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('array_pull'))
-{
-	/**
-	 *  Get a value from the array, and remove it
-	 *
-	 *  @param     array     &$array
-	 *  @param     string    $key
-	 *  @param     mixed     $default
-	 *  @return    mixed
-	 */
-	function array_pull(&$array, $key, $default = NULL)
-	{
-		$value = get($array, $key, $default);
-
-		forget($array, $key);
-
-		return $value;
-	}
-}
-
-// ------------------------------------------------------------------------
-
 if ( ! function_exists('array_pluck'))
 {
 	/**
@@ -409,6 +387,28 @@ if ( ! function_exists('array_pluck'))
 		}
 
 		return $results;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_pull'))
+{
+	/**
+	 *  Get a value from the array, and remove it
+	 *
+	 *  @param     array     &$array
+	 *  @param     string    $key
+	 *  @param     mixed     $default
+	 *  @return    mixed
+	 */
+	function array_pull(&$array, $key, $default = NULL)
+	{
+		$value = get($array, $key, $default);
+
+		forget($array, $key);
+
+		return $value;
 	}
 }
 
@@ -946,22 +946,6 @@ if ( ! function_exists('encrypt'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('env'))
-{
-	/**
-	 *  Determine if a given environment is the current environment
-	 *
-	 *  @param     string    $key
-	 *  @return    boolean
-	 */
-	function env($key)
-	{
-		return (strtolower(ENVIRONMENT) === strtolower($key));
-	}
-}
-
-// ------------------------------------------------------------------------
-
 if ( ! function_exists('ends_with'))
 {
 	/**
@@ -982,6 +966,22 @@ if ( ! function_exists('ends_with'))
 		}
 
 		return FALSE;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('env'))
+{
+	/**
+	 *  Determine if a given environment is the current environment
+	 *
+	 *  @param     string    $key
+	 *  @return    boolean
+	 */
+	function env($key)
+	{
+		return (strtolower(ENVIRONMENT) === strtolower($key));
 	}
 }
 
