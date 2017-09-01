@@ -68,6 +68,170 @@ if ( ! function_exists('app'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('array_add'))
+{
+	/**
+	 *  Add an element to an array using 'dot' notation if it doesn't exist
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $key
+	 *  @param     mixed     $value
+	 *  @return    array
+	 */
+	function array_add($array, $key, $value)
+	{
+		if (is_null(get($array, $key)))
+		{
+			set($array, $key, $value);
+		}
+
+		return $array;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_forget'))
+{
+	/**
+	 *  Remove one or many array items from a given array using 'dot' notation
+	 *
+	 *  @param     array           $array
+	 *  @param     array|string    $keys
+	 *  @return    void
+	 */
+	function array_forget(&$array, $keys)
+	{
+		$original =& $array;
+
+		foreach ((array) $keys as $key)
+		{
+			$parts = explode('.', $key);
+
+			while (count($parts) > 1)
+			{
+				$part = array_shift($parts);
+
+				if (isset($array[$part]) && is_array($array[$part]))
+				{
+					$array =& $array[$part];
+				}
+			}
+
+			unset($array[array_shift($parts)]);
+
+			// clean up after each pass
+			$array =& $original;
+		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_get'))
+{
+	/**
+	 *  Get an item from an array using 'dot' notation
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $key
+	 *  @param     mixed     $default
+	 *  @return    mixed
+	 */
+	function array_get($array, $key, $default = NULL)
+	{
+		if (is_null($key))
+		{
+			return $array;
+		}
+
+		if (isset($array[$key]))
+		{
+			return $array[$key];
+		}
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! is_array($array) OR ! array_key_exists($segment, $array))
+			{
+				return value($default);
+			}
+
+			$array = $array[$segment];
+		}
+
+		return $array;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_pull'))
+{
+	/**
+	 *  Get a value from the array, and remove it
+	 *
+	 *  @param     array     &$array
+	 *  @param     string    $key
+	 *  @param     mixed     $default
+	 *  @return    mixed
+	 */
+	function array_pull(&$array, $key, $default = NULL)
+	{
+		$value = get($array, $key, $default);
+
+		forget($array, $key);
+
+		return $value;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_set'))
+{
+	/**
+	 *  Set an array item to a given value using 'dot' notation
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $key
+	 *  @param     mixed     $value
+	 *  @return    mixed
+	 */
+	function array_set(&$array, $key, $value)
+	{
+		//	If no key is given to the method, the entire array will be replaced
+		if (is_null($key))
+		{
+			return $array = $value;
+		}
+
+		$keys = explode('.', $key);
+
+		while (count($keys) > 1)
+		{
+			$key = array_shift($keys);
+
+			//	If the key doesn't exist at this depth, we will just create
+			//	an empty array to hold the next value, allowing us to create
+			//	the arrays to hold final values at the correct depth. Then
+			//	we'll keep digging into the array.
+			if ( ! isset($array[$key]) OR ! is_array($array[$key]))
+			{
+				$array[$key] = array();
+			}
+
+			$array =& $array[$key];
+		}
+
+		$array[array_shift($keys)] = $value;
+
+		return $array;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('cache'))
 {
 	/**
