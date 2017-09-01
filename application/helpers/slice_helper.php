@@ -91,6 +91,48 @@ if ( ! function_exists('array_add'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('array_divide'))
+{
+	/**
+	 *  Divide an array into two arrays, one with keys and the other with values
+	 *
+	 *  @param     array    $array
+	 *  @return    array
+	 */
+	function array_divide($array)
+	{
+		return array(array_keys($array), array_values($array));
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_first'))
+{
+	/**
+	 *  Return the first element in an array passing a given truth test
+	 *
+	 *  @param     array       $array
+	 *  @param     \Closure    $callback
+	 *  @param     mixed       $default
+	 *  @return    mixed
+	 */
+	function array_first($array, $callback, $default = NULL)
+	{
+		foreach ($array as $key => $value)
+		{
+			if (call_user_func($callback, $key, $value))
+			{
+				return $value;
+			}
+		}
+
+		return value($default);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('array_forget'))
 {
 	/**
@@ -166,6 +208,78 @@ if ( ! function_exists('array_get'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('array_has'))
+{
+	/**
+	 *  Check if an item or items exist in an array using 'dot' notation
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $key
+	 *  @return    boolean
+	 */
+	function array_has($array, $key)
+	{
+		if (empty($array) OR is_null($key))
+		{
+			return FALSE;
+		}
+
+		if (array_key_exists($key, $array))
+		{
+			return TRUE;
+		}
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! is_array($array) OR ! array_key_exists($segment, $array))
+			{
+				return FALSE;
+			}
+
+			$array = $array[$segment];
+		}
+
+		return TRUE;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_last'))
+{
+	/**
+	 *  Return the last element in an array passing a given truth test
+	 *
+	 *  @param     array       $array
+	 *  @param     \Closure    $callback
+	 *  @param     mixed       $default
+	 *  @return    mixed
+	 */
+	function array_last($array, $callback, $default = NULL)
+	{
+		return first(array_reverse($array), $callback, $default);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_only'))
+{
+	/**
+	 *  Get a subset of the items from the given array
+	 *
+	 *  @param     array           $array
+	 *  @param     array|string    $keys
+	 *  @return    array
+	 */
+	function array_only($array, $keys)
+	{
+		return array_intersect_key($array, array_flip((array) $keys));
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('array_pull'))
 {
 	/**
@@ -227,6 +341,33 @@ if ( ! function_exists('array_set'))
 		$array[array_shift($keys)] = $value;
 
 		return $array;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_where'))
+{
+	/**
+	 *  Filter the array using the given callback
+	 *
+	 *  @param     array       $array
+	 *  @param     \Closure    $callback
+	 *  @return    array
+	 */
+	function array_where($array, callable $callback)
+	{
+		$filtered = array();
+
+		foreach ($array as $key => $value)
+		{
+			if (call_user_func($callback, $key, $value))
+			{
+				$filtered[$key] = $value;
+			}
+		}
+
+		return $filtered;
 	}
 }
 
