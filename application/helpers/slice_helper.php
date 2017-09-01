@@ -107,6 +107,54 @@ if ( ! function_exists('array_divide'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('array_dot'))
+{
+	/**
+	 *  Flatten a multi-dimensional associative array with dots
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $prepend
+	 *  @return    array
+	 */
+	function array_dot($array, $prepend = '')
+	{
+		$results = array();
+
+		foreach ($array as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$results = array_merge($results, dot($value, $prepend.$key.'.'));
+			}
+			else
+			{
+				$results[$prepend.$key] = $value;
+			}
+		}
+
+		return $results;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_except'))
+{
+	/**
+	 *  Get all of the given array except for a specified array of items
+	 *
+	 *  @param     array           $array
+	 *  @param     array|string    $keys
+	 *  @return    array
+	 */
+	function array_except($array, $keys)
+	{
+		return array_diff_key($array, array_flip((array) $keys));
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('array_first'))
 {
 	/**
@@ -128,6 +176,29 @@ if ( ! function_exists('array_first'))
 		}
 
 		return value($default);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_flatten'))
+{
+	/**
+	 *  Flatten a multi-dimensional array into a single level
+	 *
+	 *  @param     array    $array
+	 *  @return    array
+	 */
+	function array_flatten($array)
+	{
+		$return = array();
+
+		array_walk_recursive($array, function($x) use (&$return)
+		{
+			$return[] = $x;
+		});
+
+		return $return;
 	}
 }
 
@@ -297,6 +368,47 @@ if ( ! function_exists('array_pull'))
 		forget($array, $key);
 
 		return $value;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_pluck'))
+{
+	/**
+	 *  Pluck an array of values from an array
+	 *
+	 *  @param     array     $array
+	 *  @param     string    $value
+	 *  @param     string    $key
+	 *  @return    array
+	 */
+	function array_pluck($array, $value, $key = NULL)
+	{
+		$results = array();
+
+		foreach ($array as $item)
+		{
+			$item_value = data_get($item, $value);
+
+			//	If the key is "null", we will just append the value to
+			//	the array and keep looping. Otherwise we will key the
+			//	array using the value of the key we received from the
+			//	developer. Then we'll return the final array form.
+
+			if (is_null($key))
+			{
+				$results[] = $item_value;
+			}
+			else
+			{
+				$item_key = data_get($item, $key);
+
+				$results[$item_key] = $item_value;
+			}
+		}
+
+		return $results;
 	}
 }
 
