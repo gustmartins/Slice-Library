@@ -30,9 +30,16 @@ if ( ! function_exists('app'))
 			return get_instance();
 		}
 
-		$lib = ($make == 'user_agent')
-			? 'agent'
-			: ($make == 'unit_test') ? 'unit' : $make;
+		//	Special cases 'user_agent' and 'unit_test' are loaded
+		//	with diferent names
+		if ($make !== 'user_agent')
+		{
+			$lib = ($make == 'unit_test') ? 'unit' : $make;
+		}
+		else
+		{
+			$lib = 'agent';
+		}
 
 		//	Library not loaded
 		if ( ! isset(get_instance()->$lib))
@@ -618,10 +625,10 @@ if ( ! function_exists('class_uses_recursive'))
 
 		foreach (array_merge(array($class => $class), class_parents($class)) as $class)
 		{
-			$results += trait_uses_recursive($class);
+			$result += trait_uses_recursive($class);
 		}
 
-		return array_unique($results);
+		return array_unique($result);
 	}
 }
 
@@ -1195,8 +1202,8 @@ if ( ! function_exists('is'))
 		if (in_array($key, $common))
 		{
 			$function = ($key == 'writable')
-				? 'is_really_writable' :
-				'is_'.$key;
+				? 'is_really_writable'
+				: 'is_'.$key;
 
 			return $function($value);
 		}
@@ -1341,28 +1348,6 @@ if ( ! function_exists('object_get'))
 		}
 
 		return $object;
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('preg_replace_sub'))
-{
-	/**
-	 *  Replace a given pattern with each value in the array in sequentially
-	 *
-	 *  @param     string    $pattern
-	 *  @param     array     &$replacements
-	 *  @param     string    $subject
-	 *  @return    string
-	 */
-	function preg_replace_sub($pattern, &$replacements, $subject)
-	{
-		return preg_replace_callback($pattern, function() use (&$replacements)
-		{
-			return array_shift($replacements);
-		},
-		$subject);
 	}
 }
 
@@ -1881,7 +1866,7 @@ if ( ! function_exists('str_random'))
 	 */
 	function str_random($length = 16, $type = 'alnum')
 	{
-		return helper('string.random_string', $length, $type);
+		return helper('string.random_string', $type, $length);
 	}
 }
 
@@ -2076,14 +2061,14 @@ if ( ! function_exists('view'))
 	 *  @param     array     $data
 	 *  @return    string
 	 */
-	function view($view, $data = NULL)
+	function view($view, array $data = NULL)
 	{
 		if (is_null($data))
 		{
 			return app('slice')->view($view);
 		}
 
-		return app('slice')->set((array) $data)->view($view);
+		return app('slice')->set($data)->view($view);
 	}
 }
 
