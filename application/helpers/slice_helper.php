@@ -14,6 +14,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('__'))
+{
+	/**
+	 *  Translate the given message
+	 *
+	 *  @param     string    $key
+	 *  @param     array     $replace
+	 *  @return    string
+	 */
+	function __($key = NULL, $replace = array())
+	{
+		return app('slice')->i18n($key, $replace);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('app'))
 {
 	/**
@@ -779,55 +796,6 @@ if ( ! function_exists('dbase'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('device'))
-{
-	/**
-	 *  Get the agent string or one of this device information: browser
-	 *  name, browser version, mobile device, robot name, plataform or
-	 *  the referrer
-	 *
-	 *  @param     string    $key
-	 *  @return    string
-	 */
-	function device($key = NULL)
-	{
-		if (is_null($key))
-		{
-			return app('user_agent')->agent_string();
-		}
-
-		$devices = array('browser', 'version', 'mobile', 'robot', 'platform', 'referrer');
-
-		if (in_array($key, $devices))
-		{
-			return app('user_agent')->{$key}();
-		}
-
-		return NULL;
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('dump'))
-{
-	/**
-	 *  Dump the passed variables
-	 *
-	 *  @return    mixed
-	 */
-	function dump()
-	{
-		array_map(function ($data)
-		{
-			var_dump($data);
-		},
-		func_get_args());
-	}
-}
-
-// ------------------------------------------------------------------------
-
 if ( ! function_exists('dd'))
 {
 	/**
@@ -865,6 +833,36 @@ if ( ! function_exists('decrypt'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('device'))
+{
+	/**
+	 *  Get the agent string or one of this device information: browser
+	 *  name, browser version, mobile device, robot name, plataform or
+	 *  the referrer
+	 *
+	 *  @param     string    $key
+	 *  @return    string
+	 */
+	function device($key = NULL)
+	{
+		if (is_null($key))
+		{
+			return app('user_agent')->agent_string();
+		}
+
+		$devices = array('browser', 'version', 'mobile', 'robot', 'platform', 'referrer');
+
+		if (in_array($key, $devices))
+		{
+			return app('user_agent')->{$key}();
+		}
+
+		return NULL;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('dot'))
 {
 	/**
@@ -891,6 +889,25 @@ if ( ! function_exists('dot'))
 		}
 
 		return $results;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('dump'))
+{
+	/**
+	 *  Dump the passed variables
+	 *
+	 *  @return    mixed
+	 */
+	function dump()
+	{
+		array_map(function ($data)
+		{
+			var_dump($data);
+		},
+		func_get_args());
 	}
 }
 
@@ -2069,23 +2086,6 @@ if ( ! function_exists('view'))
 		}
 
 		return app('slice')->set($data)->view($view);
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('__'))
-{
-	/**
-	 *  Translate the given message
-	 *
-	 *  @param     string    $key
-	 *  @param     array     $replace
-	 *  @return    string
-	 */
-	function __($key = NULL, $replace = array())
-	{
-		return app('slice')->i18n($key, $replace);
 	}
 }
 
