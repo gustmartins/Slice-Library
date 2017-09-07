@@ -2192,6 +2192,47 @@ if ( ! function_exists('url'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('validator'))
+{
+	/**
+	 *  Validate post fields with CodeIgniter Form Validation Class
+	 *
+	 *  @param     array|null    $array
+	 *  @param     boolean       $show_errors
+	 *  @return    mixed
+	 */
+	function validator(array $array = NULL, $show_errors = FALSE)
+	{
+		if (is_null($array))
+		{
+			return app('form_validation');
+		}
+
+		foreach ($array as $fieldset => $rules)
+		{
+			list($field, $label) = array_pad(explode('.', $fieldset), 2, NULL);
+
+			if ( ! is_null($label))
+			{
+				app('form_validation')->set_rules($field, $label, $rules);
+			}
+			else
+			{
+				app('form_validation')->set_rules($field, $field, $rules);
+			}
+		}
+
+		if ($show_errors)
+		{
+			return app('form_validation')->error_array();
+		}
+
+		return (app('form_validation')->run());
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('value'))
 {
 	/**
