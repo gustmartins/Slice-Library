@@ -1,43 +1,61 @@
-# Change Log
+# Changelog
+All notable changes to this project will be documented in this file.
 
-## Version 1.2.1
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-Release date: May 22, 2017
+## [1.3.0] - 2017-09-07
 
-+ Renamed _i18n() function to i18n() and maked it public
-+ Fixed a bug when two or more `@lang()` or `@choice()` were placed in the same line
+### Added
++ Helper file with 89 functions!
 
-## Version 1.2.0
+### Changed
++ Rename _inflector() function to `inflector()` and make it public
 
-Release date: May 17, 2017
+## [1.2.1] - 2017-05-22
 
-+ Fixed a bug where config items were not initialized
-+ Add 'Slice Execution Time' to benchmark section of the profiler
+### Changed
++ Rename _i18n() function to `i18n()` and make it public
+
+### Fixed
++ Bug when two or more `@lang()` or `@choice()` were placed in the same line
+
+## [1.2.0] - 2017-05-17
+
+### Added
++ 'Slice Execution Time' to benchmark section of the profiler
++ `@lang` and `@choice` directives
 + Autoload CodeIgniter libraries and helpers
-+ Create `@lang` and `@choice` directives
 
-## Version 1.1.0
+### Fixed
++ Bug where config items were not initialized
 
-Release date: May 4, 2017
+## [1.1.0] - 2017-05-04
 
-+ Create `@each` directive
-+ Create `@isset` and `@empty` directives
+### Added
++ `@each` directive
++ `@isset` and `@empty` directives
 
-## Version 1.0.2
+## 1.0.2 - 2017-04-23
 
-Release date: April 23, 2017
-
-+ Fixed a bug where empty lines were added in the beginning of a rendered view
+### Changed
 + README.md revised to solve some writing errors
 
-## Version 1.0.1
+### Fixed
++ Bug where empty lines were added in the beginning of a rendered view
 
-Release date: March 31, 2017
+## [1.0.1] - 2017-03-31
 
-+ Bug fixed when using Modular Extensions - HMVC
+### Fixed
++ Bug when using Modular Extensions - HMVC
 
-## Version 1.0.0
-
-Release date: February 23, 2017
-
+## [1.0.0] - 2017-02-23
 First publicly released version.
+
+
+[1.3.0]: https://github.com/GustMartins/Slice-Library/releases/tag/1.3.0
+[1.2.1]: https://github.com/GustMartins/Slice-Library/releases/tag/1.2.1
+[1.2.0]: https://github.com/GustMartins/Slice-Library/releases/tag/1.2.0
+[1.1.0]: https://github.com/GustMartins/Slice-Library/releases/tag/1.1.0
+[1.0.1]: https://github.com/GustMartins/Slice-Library/releases/tag/1.0.1
+[1.0.0]: https://github.com/GustMartins/Slice-Library/releases/tag/1.0.0
