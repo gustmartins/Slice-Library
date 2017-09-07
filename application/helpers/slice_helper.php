@@ -23,7 +23,7 @@ if ( ! function_exists('__'))
 	 *  @param     array     $replace
 	 *  @return    string
 	 */
-	function __($key = NULL, $replace = array())
+	function __($key, $replace = array())
 	{
 		return app('slice')->i18n($key, $replace);
 	}
@@ -1405,7 +1405,7 @@ if ( ! function_exists('lang'))
 	 *  @param     array     $replace
 	 *  @return    string
 	 */
-	function lang($key = NULL, $replace = array())
+	function lang($key, $replace = array())
 	{
 		return app('slice')->i18n($key, $replace);
 	}
