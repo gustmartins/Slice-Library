@@ -9,6 +9,7 @@ Slice-Library is a CodeIgniter library that simulates Laravel's Blade templating
 + Easy to install and use.
 + Helps you organize your views folder.
 + 30 directives to use!
++ 89 helper functions ~(eleven required, kkk)~!
 + Does not restrict you from using plain PHP code in your views.
 + Easy to learn and to get used to.
 + Caches files until they are modified!
@@ -35,6 +36,26 @@ Your can load the Slice-Library as you load any other library in CodeIgniter:
 ```php
 $this->load->library('slice');
 ```
+
+### Slice Helper functions
+
+Since version 1.3.0 Slice-Library comes with a helper file with 89 functions! This functions will help you a lot. Some of the are:
+
++ `app()` - Returns any library instance
++ `decrypt()` - Decrypts a given string
++ `e()` - Escapes HTML entities in a string
++ `email()` - Sends an email
++ `helper()` - Loads any CodeIgniter helper
++ `input()` - Retrieves input item from the request
++ `query()` - Executes a query string
++ `session()` - Gets or sets session values
++ `str_contains()` - Determines if a given string contains a given substring
++ `validator()` - Validates post fields with CodeIgniter Form Validation Class
++ `view()` - Get the evaluated view contents for the given view
+
+In the future a full list of helpers and it's definitions and how to use them will be available.
+
+To use them, make sure the variable `enable_helper` is set `TRUE` in the `config/slice.php` file to load the helpers automatically or load the file as you would do with any CodeIgniter helper.
 
 ### Other Libraries and Helpers
 
@@ -277,7 +298,7 @@ You may construct `if` statements using the `@if`, `@elseif`, `@else`, and `@end
 @elseif (count($records) > 1)
     I have multiple records!
 @else
-    I don't have any records!
+    I do not have any records!
 @endif
 ```
 
@@ -321,7 +342,7 @@ Slice-Library provides simple directives for working with PHP's loop structures.
 @endforelse
 
 @while (true)
-    <p>I'm looping forever.</p>
+    <p>I am looping forever.</p>
 @endwhile
 ```
 
@@ -461,7 +482,7 @@ For more information about contributing to the project please, read the [Contrib
 
 ## Change Log
 
-Currently, the Slice-Library is in the version **1.2.1**. See the full [Changelog][changelog] for more details.
+Currently, the Slice-Library is in the version **1.3.0**. See the full [Changelog][changelog] for more details.
 
 [GustMartins]: https://github.com/GustMartins
 [contrib]: https://github.com/GustMartins/Slice-Library/blob/master/contributing.md

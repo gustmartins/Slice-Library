@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  *  Slice-Library Helper functions
- *  
+ *
  *  @package		CodeIgniter
  *	@subpackage		Helpers
  *	@category		Helpers
@@ -1319,7 +1319,7 @@ if ( ! function_exists('input'))
 
 			return NULL;
 		}
-		
+
 		if ($value = app('input')->post_get($key))
 		{
 			return $value;
