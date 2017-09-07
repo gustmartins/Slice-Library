@@ -167,6 +167,11 @@ class Slice {
 		$this->CI->load->driver('cache');	//	Load CI cache driver
 		$this->CI->config->load('slice');	//	Load Slice config file
 
+		if (config_item('enable_helper'))
+		{
+			$this->CI->load->helper('slice');	//	Load Slice Helper
+		}
+
 		$this->initialize($params);
 
 		//	Autoload CodeIgniter Libraries and Helpers
