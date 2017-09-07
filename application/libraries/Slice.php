@@ -1216,7 +1216,7 @@ class Slice {
 	 */
 	protected function _compile_lang($content)
 	{
-		$pattern = '/(\s*)@lang(\s*\(.*?\))/';
+		$pattern = '/(\s*)@lang(\s*\(.*\))/';
 
 		return preg_replace($pattern, '<?php echo $this->i18n$2; ?>', $content);
 	}
@@ -1231,7 +1231,7 @@ class Slice {
 	 */
 	protected function _compile_choice($content)
 	{
-		$pattern = '/(\s*)@choice(\s*\(.*?\))/';
+		$pattern = '/(\s*)@choice(\s*\(.*\))/';
 
 		return preg_replace($pattern, '<?php echo $this->inflector$2; ?>', $content);
 	}
