@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @category	Library
  * @author		Gustavo Martins <gustavo_martins92@hotmail.com>
  * @link		https://github.com/GustMartins/Slice-Library
- * @version 	1.2.1
+ * @version 	1.3.0
  */
 class Slice {
 
@@ -22,7 +22,7 @@ class Slice {
 	 *  @var   string
 	 */
 	public $slice_ext		= '.slice.php';
-	
+
 	/**
 	 *  The amount of time to keep the file in cache
 	 *
@@ -43,7 +43,7 @@ class Slice {
 	 *  @var   string
 	 */
 	public $locale			= 'english';
-	
+
 	// --------------------------------------------------------------------------
 
 	/**
@@ -112,7 +112,7 @@ class Slice {
 	// --------------------------------------------------------------------------
 
 	/**
-	 *  All of the compiler methods used by Slice to simulate 
+	 *  All of the compiler methods used by Slice to simulate
 	 *  Laravel Blade Template
 	 *
 	 *  @var   array
@@ -149,7 +149,7 @@ class Slice {
 		'lang',
 		'choice'
 	);
-	
+
 	// --------------------------------------------------------------------------
 
 	/**
@@ -166,6 +166,11 @@ class Slice {
 
 		$this->CI->load->driver('cache');	//	Load CI cache driver
 		$this->CI->config->load('slice');	//	Load Slice config file
+
+		if (config_item('enable_helper'))
+		{
+			$this->CI->load->helper('slice');	//	Load Slice Helper
+		}
 
 		$this->initialize($params);
 
@@ -316,7 +321,7 @@ class Slice {
 
 	/**
 	 *  Appends or concatenates a value to a data in Slice Template
-	 *  
+	 *
 	 *  If data type is array it will append
 	 *  If data type is string it will concatenate
 	 *
@@ -370,7 +375,7 @@ class Slice {
 
 	/**
 	 *  Verifies if a file exists!
-	 *  
+	 *
 	 *  This function verifies if a file exists evven if you are using
 	 *  Modular Extensions
 	 *
@@ -381,7 +386,7 @@ class Slice {
 	public function exists($filename, $show_error = FALSE)
 	{
 		$view_name = preg_replace('/([a-z]\w+)\./', '$1/', $filename);
-		
+
 		//	The default path to the file
 		$default_path = VIEWPATH.$view_name.$this->slice_ext;
 
@@ -569,8 +574,8 @@ class Slice {
 
 	/**
 	 *  Starts buffering the content of a section
-	 *  
-	 *  If the param $value is different of NULL it will be the content of 
+	 *
+	 *  If the param $value is different of NULL it will be the content of
 	 *  the current section
 	 *
 	 *  @param    string   $section
@@ -594,8 +599,8 @@ class Slice {
 
 	/**
 	 *  Stops buffering the content of a section
-	 *  
-	 *  If the param $value is different of NULL it will be the 
+	 *
+	 *  If the param $value is different of NULL it will be the
 	 *  content of the current section
 	 *
 	 *  @param    mixed    $value
@@ -604,7 +609,7 @@ class Slice {
 	protected function _closing_section($value = NULL)
 	{
 		$last_section = array_pop($this->_buffer);
-		
+
 		if ($value !== NULL)
 		{
 			$this->_extend_section($last_section, $value);
@@ -632,7 +637,7 @@ class Slice {
 
 		//	Here tries to get the string with the $file variable...
 		$line = isset($this->_language[$file]) ? $this->_language[$file] : $file;
-		
+
 		if ($string !== NULL)
 		{
 			if ( ! isset($this->_i18n_loaded[$file]) OR $this->_i18n_loaded[$file] !== $this->locale)
@@ -865,7 +870,7 @@ class Slice {
 	protected function _compile_forelse($content)
 	{
 		$pattern = '/(\s*)@forelse(\s*\(.*\))(\s*)/';
-		
+
 		preg_match_all($pattern, $content, $matches);
 
 		foreach ($matches[0] as $forelse)
@@ -1211,7 +1216,7 @@ class Slice {
 	 */
 	protected function _compile_lang($content)
 	{
-		$pattern = '/(\s*)@lang(\s*\(.*?\))/';
+		$pattern = '/(\s*)@lang(\s*\(.*\))/';
 
 		return preg_replace($pattern, '<?php echo $this->i18n$2; ?>', $content);
 	}
@@ -1226,7 +1231,7 @@ class Slice {
 	 */
 	protected function _compile_choice($content)
 	{
-		$pattern = '/(\s*)@choice(\s*\(.*?\))/';
+		$pattern = '/(\s*)@choice(\s*\(.*\))/';
 
 		return preg_replace($pattern, '<?php echo $this->inflector$2; ?>', $content);
 	}

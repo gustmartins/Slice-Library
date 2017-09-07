@@ -1,0 +1,22 @@
+#	Este arquivo é para unificar o estilo do código em diferentes editores e IDEss
+#	http://editorconfig.org
+
+root = true
+
+# --------------------------------
+#	Aplicavel a qualquer arquivo
+# --------------------------------
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+# Visto que a maioria dos arquivos são php, foi definido na linha abaixo
+# que se deve usar identação por tab.
+indent_style = tab
+
+# ------------------------------------------------------
+#	Aplicavel a qualquer arquivo markdown
+# ------------------------------------------------------
+[*.md]
+trim_trailing_whitespace = false

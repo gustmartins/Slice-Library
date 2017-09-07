@@ -51,3 +51,14 @@ $config['enable_autoload'] = FALSE;
 */
 $config['libraries'] = array();
 $config['helpers'] = array();
+
+/*
+|--------------------------------------------------------------------------
+| Load Slice Helper
+|--------------------------------------------------------------------------
+|
+| Set to TRUE and Slice helper file will be loaded in the initialization.
+| Make sure you have the proper file at application/helper/slice_helper.php
+|
+*/
+$config['enable_helper'] = TRUE;

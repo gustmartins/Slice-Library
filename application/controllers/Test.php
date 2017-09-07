@@ -25,8 +25,10 @@ class Test extends CI_Controller
 					->with('users', [['id' => 1, 'name' => 'John'], ['id' => 2, 'name' => 'Jane'], ['id' => 3, 'name' => 'Dave'], ['id' => 4, 'name' => 'Arthur'], ['id' => 5, 'name' => 'Michael'], ['id' => 6, 'name' => 'Ben']])
 					->with('members', [])
 					->with('rows', '0')
-					->directive('Test::custom_slice_directive')
-					->view('page');
+					->directive('Test::custom_slice_directive');
+
+		//	Slice-Library 1.3 comes with helpers to make things easier!
+		view('page');
 	}
 
 	/**
