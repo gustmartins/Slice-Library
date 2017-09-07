@@ -115,6 +115,34 @@ if ( ! function_exists('array_add'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('array_collapse'))
+{
+	/**
+	 *  Collapse an array of arrays into a single array
+	 *
+	 *  @param     array    $array
+	 *  @return    array
+	 */
+	function array_collapse($array)
+	{
+		$results = array();
+
+		foreach ($array as $values)
+		{
+			if ( ! is_array($values))
+			{
+				continue;
+			}
+
+			$results = array_merge($results, $values);
+		}
+
+		return $results;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('array_divide'))
 {
 	/**
@@ -416,6 +444,33 @@ if ( ! function_exists('array_pluck'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('array_prepend'))
+{
+	/**
+	 *  Push an item onto the beginning of an array
+	 *
+	 *  @param     array    $array
+	 *  @param     mixed    $value
+	 *  @param     mixed    $key
+	 *  @return    array
+	 */
+	function array_prepend($array, $value, $key = NULL)
+	{
+		if (is_null($key))
+		{
+			array_unshift($array, $value);
+		}
+		else
+		{
+			$array = array($key => $value) + $array;
+		}
+
+		return $array;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('array_pull'))
 {
 	/**
@@ -433,6 +488,41 @@ if ( ! function_exists('array_pull'))
 		forget($array, $key);
 
 		return $value;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_random'))
+{
+	/**
+	 *  Get a random value from an array
+	 *
+	 *  @param     array           $array
+	 *  @param     integer|null    $amount
+	 *  @return    mixed
+	 */
+	function array_random($array, $amount = NULL)
+	{
+		if (($amount ?: 1) > count($array))
+		{
+			return FALSE;
+		}
+
+		if (is_null($amount))
+		{
+			return $array[array_rand($array)];
+		}
+
+		$keys		= array_rand($array, $amount);
+		$results	= array();
+
+		foreach ((array) $keys as $key)
+		{
+			$results[] = $array[$key];
+		}
+
+		return $results;
 	}
 }
 
@@ -482,6 +572,39 @@ if ( ! function_exists('array_set'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('array_sort_recursive'))
+{
+	/**
+	 *  Recursively sort an array by keys and values
+	 *
+	 *  @param     array    $array
+	 *  @return    array
+	 */
+	function array_sort_recursive($array)
+	{
+		foreach ($array as &$value)
+		{
+			if (is_array($value))
+			{
+				$value = array_sort_recursive($value);
+			}
+		}
+
+		if (array_keys(array_keys($array)) !== array_keys($array))
+		{
+			ksort($array);
+		}
+		else
+		{
+			sort($array);
+		}
+
+		return $array;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('array_where'))
 {
 	/**
@@ -504,6 +627,22 @@ if ( ! function_exists('array_where'))
 		}
 
 		return $filtered;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('array_wrap'))
+{
+	/**
+	 *  If the given value is not an array, wrap it in one
+	 *
+	 *  @param     mixed    $value
+	 *  @return    array
+	 */
+	function array_wrap($value)
+	{
+		return is_array($value) ? $value :array($value);
 	}
 }
 
