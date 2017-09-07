@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @category	Library
  * @author		Gustavo Martins <gustavo_martins92@hotmail.com>
  * @link		https://github.com/GustMartins/Slice-Library
- * @version 	1.2.1
+ * @version 	1.3.0
  */
 class Slice {
 
