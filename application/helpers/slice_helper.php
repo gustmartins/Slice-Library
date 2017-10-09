@@ -731,7 +731,7 @@ if ( ! function_exists('charset'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('choise'))
+if ( ! function_exists('choice'))
 {
 	/**
 	 *  Translate the given message based on a count
@@ -741,7 +741,7 @@ if ( ! function_exists('choise'))
 	 *  @param     array     $replace
 	 *  @return    string
 	 */
-	function choise($key, $number, $replace = array())
+	function choice($key, $number, $replace = array())
 	{
 		return app('slice')->inflector($key, $number, $replace);
 	}
