@@ -1451,6 +1451,23 @@ if ( ! function_exists('length'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('make'))
+{
+	/**
+	 *  Get the available library instance and return a new instance of it
+	 *
+	 *  @param     string    $class
+	 *  @return    object
+	 */
+	function make($class)
+	{
+		app($class);
+		return new $class();
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('mark'))
 {
 	/**
