@@ -731,7 +731,7 @@ if ( ! function_exists('charset'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('choise'))
+if ( ! function_exists('choice'))
 {
 	/**
 	 *  Translate the given message based on a count
@@ -741,7 +741,7 @@ if ( ! function_exists('choise'))
 	 *  @param     array     $replace
 	 *  @return    string
 	 */
-	function choise($key, $number, $replace = array())
+	function choice($key, $number, $replace = array())
 	{
 		return app('slice')->inflector($key, $number, $replace);
 	}
@@ -1446,6 +1446,23 @@ if ( ! function_exists('length'))
 		}
 
 		return mb_strlen($value);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('make'))
+{
+	/**
+	 *  Get the available library instance and return a new instance of it
+	 *
+	 *  @param     string    $class
+	 *  @return    object
+	 */
+	function make($class)
+	{
+		app($class);
+		return new $class();
 	}
 }
 
