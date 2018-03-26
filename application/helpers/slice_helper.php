@@ -837,9 +837,9 @@ if ( ! function_exists('csrf_field'))
 	function csrf_field()
 	{
 		return helper(
-			'form.form_hidden',
+			'form.form_hidden',array(
 			get_instance()->security->get_csrf_token_name(),
-			csrf_token()
+			csrf_token())
 		);
 	}
 }
@@ -1276,7 +1276,7 @@ if ( ! function_exists('helper'))
 	 *  @param     array     $params
 	 *  @return    mixed
 	 */
-	function helper($name, ...$params)
+	function helper($name, $params)
 	{
 		//	Separate 'file' and 'helper' by dot notation
 		list($helper, $func) = array_pad(explode('.', $name), 2, NULL);
@@ -1758,9 +1758,9 @@ if ( ! function_exists('slug_case'))
 	 */
 	function slug_case($str, $separator = '-', $lowercase = TRUE)
 	{
-		$str = helper('text.convert_accented_characters', $str);
+		$str = helper('text.convert_accented_characters', array($str));
 
-		return helper('url.url_title', $str, $separator, $lowercase);
+		return helper('url.url_title', array($str, $separator, $lowercase));
 	}
 }
 
@@ -2022,7 +2022,7 @@ if ( ! function_exists('str_limit'))
 	 */
 	function str_limit($str, $max_length = 100, $position = 1, $ellipsis = '&hellip;')
 	{
-		return helper('text.ellipsize', $str, $max_length, $position, $ellipsis);
+		return helper('text.ellipsize', array($str, $max_length, $position, $ellipsis));
 	}
 }
 
@@ -2039,7 +2039,7 @@ if ( ! function_exists('str_random'))
 	 */
 	function str_random($length = 16, $type = 'alnum')
 	{
-		return helper('string.random_string', $type, $length);
+		return helper('string.random_string', array($type, $length));
 	}
 }
 
@@ -2300,4 +2300,74 @@ if ( ! function_exists('with'))
 	{
 		return $object;
 	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('max_val_array'))
+{
+	/**
+	 *  Return the max value fron array by key
+	 *
+	 *  @param     mixed    $object
+	 *  @return    mixed
+	 */
+	function max_val_array($array, $keyToSearch)
+	{
+	    $currentMax = NULL;
+	    foreach($array as $arr)
+	    {
+	        foreach($arr as $key => $value)
+	        {
+	            if ($key == $keyToSearch && ($value >= $currentMax))
+	            {
+	                $currentMax = $value;
+	            }
+	        }
+	    }
+
+	    return $currentMax;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('min_val_array'))
+{
+	/**
+	 *  Return the min value fron array by key
+	 *
+	 *  @param     mixed    $object
+	 *  @return    mixed
+	 */
+	function min_val_array($array, $keyToSearch){ 
+	    $min = array(); 
+	    foreach ($array as $val) { 
+	        if (!isset($val[$keyToSearch]) and is_array($val)) { 
+	            $min2 = min_by_key($val, $keyToSearch); 
+	            $min[$min2] = 1; 
+	        } elseif (!isset($val[$keyToSearch]) and !is_array($val)) { 
+	            return false; 
+	        } elseif (isset($val[$keyToSearch])) { 
+	            $min[$val[$keyToSearch]] = 1; 
+	        } 
+	    } 
+	    return min( array_keys($min) ); 
+	} 
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('min_max_array'))
+{
+	/**
+	 *  Return an array with min and max value from array by key
+	 *
+	 *  @param     mixed    $object
+	 *  @return    mixed
+	 */
+	function min_max_array($array, $keyToSearch){ 
+	     
+	    return array( 'min' => min_val_array($array, $keyToSearch), 'max'=> max_val_array($array, $keyToSearch) ); 
+	} 
 }
