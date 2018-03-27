@@ -73,10 +73,8 @@ if ( ! function_exists('app'))
 				: 'library';
 
 			get_instance()->load->$loader($make, $params);
-		} else
-		{
-			return get_instance()->$make;
-		}
+
+		} 
 
 		//	Special name for 'unit_test' is 'unit'
 		if ($make == 'unit_test')
@@ -87,7 +85,11 @@ if ( ! function_exists('app'))
 		elseif ($make == 'user_agent')
 		{
 			return get_instance()->agent;
-		}		
+		}	
+		if (! ends_with($make, '_model')) {
+			return get_instance()->$make;
+		}
+			
 	}
 }
 
